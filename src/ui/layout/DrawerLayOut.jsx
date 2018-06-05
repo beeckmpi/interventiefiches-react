@@ -6,8 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import { Link } from 'react-router-dom';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -16,7 +14,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import MoveToInboxIcon from '@material-ui/icons/MoveToInbox';
+import ArchiveIcon from '@material-ui/icons/Archive';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -116,7 +116,7 @@ class MiniDrawer extends React.Component {
     return (
       <div className={classes.root}>
         <AppBar
-          position="absolute"
+          position="fixed"
           className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
         >
           <Toolbar disableGutters={!this.state.open}>
@@ -139,6 +139,7 @@ class MiniDrawer extends React.Component {
             paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
           }}
           open={this.state.open}
+          
         >
          
           <div className={classes.toolbar}>
@@ -148,22 +149,40 @@ class MiniDrawer extends React.Component {
           </div>
           <Divider />
           <List style={{paddingLeft: "0px"}}>
-            <ListItem button  component="a" href="/#ontvangenFiches" >
+            <ListItem button  component={Link} to="/fiches/Toevoegen">
+              <ListItemIcon style={{color: "#FFFFFF"}} >
+                <NoteAddIcon />
+              </ListItemIcon>
+              <ListItemText style={{color: "#FFFFFF"}} primary="Toevoegen" />
+            </ListItem>
+            <ListItem button  component={Link} to="/mijnFiches" >
               <ListItemIcon style={{color: "#FFFFFF"}}>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText style={{color: "#FFFFFF"}} primary="Mijn Fiches" />
             </ListItem>
-            <MenuItem   containerElement={<Link to="/mijnFiches" title="Mijn Fiches" />} primaryText="Mijn Fiches" />
-            <MenuItem  style={{color: "#FFFFFF"}} containerElement={<Link to="/ontvangenFiches" title="Ontvangen Fiches" />} primaryText="Ontvangen Fiches" />
-            <MenuItem  style={{color: "#FFFFFF"}} containerElement={<Link to="/alleFiches" title="Alle Fiches" />} primaryText="Alle Fiches" />
+            <ListItem button  component={Link} to="/ontvangenFiches" >
+              <ListItemIcon style={{color: "#FFFFFF"}}>
+                <MoveToInboxIcon />
+              </ListItemIcon>
+              <ListItemText style={{color: "#FFFFFF"}} primary="Ontvangen Fiches" />
+            </ListItem>
+            <ListItem button  component={Link} to="/alleFiches" >
+              <ListItemIcon style={{color: "#FFFFFF"}}>
+                <ArchiveIcon />
+              </ListItemIcon>
+              <ListItemText style={{color: "#FFFFFF"}} primary="Alle Fiches" />
+            </ListItem> 
           </List>
         </Drawer>
-        <div>
-          <Route exact path="/" component={SignIn}/>
-          <Route exact path="/registeren" component={Join} />
-          <Route exact path="/aanmelden" component={SignIn} />
-          <Route exact path="/fiches/Toevoegen" component={ToevoegenFiche}/>
+        <div className={classes.content}>
+          <div className={classes.toolbar} />
+          <div style={{display: 'flex',}}>
+            <Route exact path="/" component={SignIn}/>
+            <Route exact path="/registeren" component={Join} />
+            <Route exact path="/aanmelden" component={SignIn} />
+            <Route exact path="/fiches/Toevoegen" component={ToevoegenFiche}/>
+          </div>
         </div>
       </div>
     );

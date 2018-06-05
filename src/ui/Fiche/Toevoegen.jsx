@@ -2,15 +2,10 @@
 
 // react imports
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 
 // material-ui imports
 import DatePicker from 'material-ui/DatePicker';
-import FontIcon from 'material-ui/FontIcon';
-import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
@@ -20,19 +15,9 @@ import AutoComplete from 'material-ui/AutoComplete';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 
 //styles
-const itemStyle = {fontSize:"smaller", margin:'15px 0px 6px 0px'};
 const arrowDownStyles = {height:"40px", position:"absolute", "right": "5px", "top": "18px", width:"40px", color:'#AAA'};
-const paperStyle = {position:"relative", padding:"5px 15px", width: "95%", margin: '20px auto', color:'#AAA'}
+const paperStyle = {position:"relative", padding:"5px 15px", marginBottom:'15px', width: "95%", color:'#AAA'}
 
-//styles
-const paperTableStyle = {
-  minWidth: '50%',
-  maxWidth: '70%',
-  marginBottom: '20px'
-}
-const tableStyle = {
-  width: '100%'
-}
 const floatingLabelColor = {
   color: "#757575"
 }
@@ -71,7 +56,7 @@ export default class Toevoegen extends Component {
       if (value === "Andere"){
         if(id==="oproepDoor"){
           this.setState({"andereOproepShow": "show"});
-        } else if (id=="melding") {
+        } else if (id==="melding") {
           this.setState({"andereMeldingShow": "show"});
         }
       } else {
@@ -117,9 +102,9 @@ export default class Toevoegen extends Component {
       value: 'GSM',
     };
     return (
-      <div className="container" style={{margin:"10px 30px 40px 230px", padding:"5px 8px 15px 8px"}}>
-        <h3 style={{color:"#fff", marginLeft:"30px"}}>Fiche Toevoegen</h3>
-        <Paper id="content" style={{padding:"1px 15px 15px 15px", position: "relative"}}>
+      <div className="container" style={{margin:"0px 0px 40px 0px", padding:"0px 8px 15px 8px"}}>
+        <h3 style={{color:"#000", marginLeft:"10px"}}>Fiche Toevoegen</h3>
+        <Paper id="content" style={{padding:"1px 15px 15px 15px",marginBottom: '15px',position: "relative"}}>
           <h3>Gegeven Provinciaal Coördinator</h3>
           <div style={{display:"inline-block"}}>
              <DatePicker floatingLabelStyle={floatingLabelColor} hintText="Op datum" locale="nl" floatingLabelText="Op (Datum)" value={opDatum} name="opDatum" onChange={this.handleChangeDate}  mode="landscape" />
