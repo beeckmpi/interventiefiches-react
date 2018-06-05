@@ -19,8 +19,6 @@ export default class AuthPageSignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      firstname: '',
       email: '',
       password: ''
     };
@@ -31,10 +29,34 @@ export default class AuthPageSignIn extends Component {
   }
   signInUser = (event) => {
     event.preventDefault();
-    /*var userObject = {
-      email: this.state.email,
-      password: this.state.password,
-    };*/
+    const {email, password} = this.state;
+    return fetch('http://localhost:3333/login/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+
+      this.setState({
+        isLoading: false,
+        dataSource: responseJson,
+      }, function(){
+
+      });
+
+    })
+    .catch((error) =>{
+      console.error(error);
+    });   
    
   }
   render() {
@@ -51,12 +73,6 @@ export default class AuthPageSignIn extends Component {
             <RaisedButton primary={true} label="Aanmelden" onClick={this.signInUser} />
           </div>
         </div>
-        <GoogleLogin
-          clientId="851162706229-v8qt3v0d2qck0lpah9am2st32bqatti7.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={responseGoogle}
-          onFailure={responseGoogle}
-        />
         <div style={{width:'20%', display:'inline-block'}}>
 
         </div>
