@@ -25,3 +25,14 @@ input:-webkit-autofill:active {
         color: inherit;
     }
 }
+.error {
+    background-color: pink;
+    font-weight: bold;
+    padding: 8px 15px;
+    margin: 9px 0px;
+}
+
+a.title, a.title:visited {
+    text-decoration: none;
+    color: #fff
+}

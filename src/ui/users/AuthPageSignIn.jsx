@@ -1,5 +1,6 @@
 // react imports
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
@@ -20,7 +21,10 @@ export default class AuthPageSignIn extends Component {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '', 
+      redirect: false,
+      isLoading: false,
+      loginData: {}
     };
   }
   handleChange(event) {
@@ -29,6 +33,7 @@ export default class AuthPageSignIn extends Component {
   }
   signInUser = (event) => {
     event.preventDefault();
+    this.setState({error: false, errorMessage: ""});
     const {email, password} = this.state;
     return fetch('http://localhost:3333/login/', {
       method: 'POST',
@@ -45,21 +50,36 @@ export default class AuthPageSignIn extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-
-      this.setState({
-        isLoading: false,
-        dataSource: responseJson,
-      }, function(){
-
-      });
+      console.log(responseJson);
+      if (responseJson[0]!==undefined){
+        if(responseJson[0]['field']==="password"){
+          this.setState({error: true, errorMessage: "Het wachtwoord is niet correct"});
+        } else if (responseJson[0]['field']==="email"){
+          this.setState({error: true, errorMessage: "Het mailadres zit niet in de databank"});
+        } 
+      } else {
+        sessionStorage.setItem('JWT', responseJson.token);
+        sessionStorage.setItem('RefreshToken', responseJson.refreshToken);
+        this.setState({
+          isLoading: false,
+          loginData: responseJson,
+          redirect: true
+        });
+      }
 
     })
     .catch((error) =>{
       console.error(error);
+      
     });   
    
   }
   render() {
+    const { redirect } = this.state;
+
+    if (redirect) {
+      return <Redirect to='/fiches/Toevoegen'/>;
+    }
     return (
       <Paper id="table" style={paperTableStyle} zDepth={3}>
         <div style={{width:'80%', display:'inline-block'}}>
@@ -69,6 +89,9 @@ export default class AuthPageSignIn extends Component {
           <div className="formInput input-field">
             <TextField floatingLabelText="Wachtwoord" hintText="wachtwoord" type="Password" id="password" style={{width: '100%'}} value={this.state.password} onChange={this.handleChange.bind(this)} />
           </div>
+          {this.state.error && <div className="error">
+            {this.state.errorMessage} 
+          </div>}
           <div className="formInput">
             <RaisedButton primary={true} label="Aanmelden" onClick={this.signInUser} />
           </div>

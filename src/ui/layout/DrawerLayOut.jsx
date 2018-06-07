@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -27,6 +27,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SignIn from '../users/AuthPageSignIn';
 import Join from '../users/AuthPageJoin';
 import ToevoegenFiche from '../Fiche/Toevoegen';
+import MijnFiches from '../Fiche/MijnFiches';
+import ViewFiche from '../Fiche/View';
 
 const drawerWidth = 240;
 
@@ -44,7 +46,6 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    backgroundColor: "#263238" ,
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -62,7 +63,6 @@ const styles = theme => ({
     display: 'none',
   },
   drawerPaper: {
-    backgroundColor: "#263238" ,
     position: 'relative',
     whiteSpace: 'nowrap',
     width: drawerWidth,
@@ -95,12 +95,48 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
 });
+const Auth = () => {
+  var isAuthenticated = false;
+
+  if (sessionStorage.getItem('JWT')!==null) {
+    isAuthenticated = true;
+  } else {
+    isAuthenticated = false;
+  }
+  return isAuthenticated;
+};
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      Auth() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/aanmelden",
+            state: { from: props.location }
+          }}
+        />
+      )
+    }
+  />
+);
 
 class MiniDrawer extends React.Component {
   state = {
     open: false,
   };
+  state = {
+    redirectToReferrer: false
+  };
 
+  login = () => {
+    Auth.authenticate(() => {
+      this.setState({ redirectToReferrer: true });
+    });
+  };
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -108,6 +144,7 @@ class MiniDrawer extends React.Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   };
+  
 
   render() {
     const { classes, theme } = this.props;
@@ -129,7 +166,7 @@ class MiniDrawer extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" noWrap>
-              Interventiefiches
+              <Link to="/" className="title">Interventiefiches</Link>
             </Typography>
           </Toolbar>
         </AppBar>
@@ -144,44 +181,46 @@ class MiniDrawer extends React.Component {
          
           <div className={classes.toolbar}>
             <IconButton onClick={this.handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon  style={{color: "#ffffff"}} /> : <ChevronLeftIcon  style={{color: "#ffffff"}} />}
+              {theme.direction === 'rtl' ? <ChevronRightIcon  /> : <ChevronLeftIcon  />}
             </IconButton>
           </div>
           <Divider />
           <List style={{paddingLeft: "0px"}}>
             <ListItem button  component={Link} to="/fiches/Toevoegen">
-              <ListItemIcon style={{color: "#FFFFFF"}} >
+              <ListItemIcon >
                 <NoteAddIcon />
               </ListItemIcon>
-              <ListItemText style={{color: "#FFFFFF"}} primary="Toevoegen" />
+              <ListItemText primary="Toevoegen" />
             </ListItem>
-            <ListItem button  component={Link} to="/mijnFiches" >
-              <ListItemIcon style={{color: "#FFFFFF"}}>
+            <ListItem button  component={Link} to="/fiches/mine" >
+              <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
-              <ListItemText style={{color: "#FFFFFF"}} primary="Mijn Fiches" />
+              <ListItemText primary="Mijn Fiches" />
             </ListItem>
             <ListItem button  component={Link} to="/ontvangenFiches" >
-              <ListItemIcon style={{color: "#FFFFFF"}}>
+              <ListItemIcon>
                 <MoveToInboxIcon />
               </ListItemIcon>
-              <ListItemText style={{color: "#FFFFFF"}} primary="Ontvangen Fiches" />
+              <ListItemText primary="Ontvangen Fiches" />
             </ListItem>
             <ListItem button  component={Link} to="/alleFiches" >
-              <ListItemIcon style={{color: "#FFFFFF"}}>
+              <ListItemIcon>
                 <ArchiveIcon />
               </ListItemIcon>
-              <ListItemText style={{color: "#FFFFFF"}} primary="Alle Fiches" />
+              <ListItemText primary="Alle Fiches" />
             </ListItem> 
           </List>
         </Drawer>
-        <div className={classes.content}>
+        <div style={{position:'relative', display:'plex', width:'100%'}}>
           <div className={classes.toolbar} />
           <div style={{display: 'flex',}}>
-            <Route exact path="/" component={SignIn}/>
-            <Route exact path="/registeren" component={Join} />
-            <Route exact path="/aanmelden" component={SignIn} />
-            <Route exact path="/fiches/Toevoegen" component={ToevoegenFiche}/>
+          <PrivateRoute exact path="/" component={ToevoegenFiche}/>
+          <Route exact path="/registeren" component={Join} />
+          <Route exact path="/aanmelden" component={SignIn} />
+          <PrivateRoute  exact path="/fiches/Toevoegen" component={ToevoegenFiche}/>
+          <PrivateRoute  exact path="/fiches/mine" component={MijnFiches}  />
+          <PrivateRoute  exact path="/fiches/view/:id" component={ViewFiche}  />
           </div>
         </div>
       </div>

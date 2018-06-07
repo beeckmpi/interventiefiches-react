@@ -2,6 +2,7 @@
 
 // react imports
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 // material-ui imports
 import DatePicker from 'material-ui/DatePicker';
@@ -13,7 +14,11 @@ import TextField from 'material-ui/TextField';
 import TimePicker from 'material-ui/TimePicker';
 import AutoComplete from 'material-ui/AutoComplete';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 //styles
 const arrowDownStyles = {height:"40px", position:"absolute", "right": "5px", "top": "18px", width:"40px", color:'#AAA'};
 const paperStyle = {position:"relative", padding:"5px 15px", marginBottom:'15px', width: "95%", color:'#AAA'}
@@ -24,7 +29,15 @@ const floatingLabelColor = {
 
 //locales
 let DateTimeFormat;
-
+const styles = theme => ({
+  root: {
+    width: '100%',
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+});
 export default class Toevoegen extends Component {
   constructor(props) {
     super(props);
@@ -45,6 +58,7 @@ export default class Toevoegen extends Component {
       height: '300px',
     };
   }
+  
   handleUpdateInput = (searchText, dataSource, params) => {this.setState({doorgegevenAan: searchText,}); };
   handleNewRequest = (chosenRequest, index) => {this.setState({doorgegevenAan: chosenRequest.naam, GSM: chosenRequest.GSM});};
   handleChangeDate = (event, date) => this.setState({"opDatum": date});
@@ -79,9 +93,27 @@ export default class Toevoegen extends Component {
     };
     console.log(dataInputs);
     const dataC = Object.assign({}, dataInputs, state);
-   
+    return fetch('http://localhost:3333/fiche/store', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        
+      },
+      body: JSON.stringify(dataC)
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log(responseJson);
+    })
+    .catch((error) =>{
+      console.error(error);
+      
+    });   
   }
   render() {
+    const { classes } = this.props;
     const {
       andereMeldingShow,
       andereOproepShow,
@@ -328,6 +360,14 @@ export default class Toevoegen extends Component {
             />
           </div>
         </Paper>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography><h3>Vaststelling</h3></Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+           
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
         <Paper style={paperStyle}>
           <KeyboardArrowDown style={arrowDownStyles} />
           <h3>Vaststelling</h3>
@@ -356,3 +396,6 @@ export default class Toevoegen extends Component {
     );
   }
 }
+Toevoegen.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
