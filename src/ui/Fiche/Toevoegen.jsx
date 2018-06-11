@@ -12,7 +12,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import TimePicker from 'material-ui/TimePicker';
-import AutoComplete from 'material-ui/AutoComplete';
 import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -27,17 +26,7 @@ const floatingLabelColor = {
   color: "#757575"
 }
 
-//locales
-let DateTimeFormat;
-const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-});
+
 export default class Toevoegen extends Component {
   constructor(props) {
     super(props);
@@ -113,26 +102,15 @@ export default class Toevoegen extends Component {
     });   
   }
   render() {
-    const { classes } = this.props;
     const {
       andereMeldingShow,
       andereOproepShow,
-      bijkomendeInformatie,
       district,
-      doorgegevenAan,
       melding,
       opDatum,
-      opmerkingBereikbaarheid,
-      oproep,
       oproepDoor,
-      provinciaalCoordinator,
       richting,
-      height
     } = this.state;
-    const dataSourceConfig = {
-      text: 'naam',
-      value: 'GSM',
-    };
     return (
       <div className="container" style={{margin:"0px 0px 40px 0px", padding:"0px 8px 15px 8px"}}>
         <h3 style={{color:"#000", marginLeft:"10px"}}>Fiche Toevoegen</h3>

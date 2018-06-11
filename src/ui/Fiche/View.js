@@ -1,14 +1,9 @@
 // react imports
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import moment from 'moment-es6';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 // imports
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-import KeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import ArrowDownward from 'material-ui/svg-icons/navigation/arrow-downward';
 import ArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
 import PDF from 'material-ui/svg-icons/image/picture-as-pdf';
@@ -26,18 +21,10 @@ import Vaststelling from './Components/view/vaststelling';
 import Beslissing from './Components/view/beslissing';
 import Tijdstippen from './Components/view/tijdstippen';
 import Bijkomende from './Components/view/bijkomende';
-import Bijlages from './Components/view/bijlages';
-//styles
-const itemStyle = {fontSize:"smaller", margin:'15px 0px 6px 0px'};
-const arrowDownStyles = {height:"50px", position:"absolute", "right": "5px", "top": "8px", width:"40px"};
-const paperStyle = {position:"relative", transition: "max-height 0.6s ease-in-out", padding:"5px 15px", width: "95%", margin: '20px auto'};
-const closedStyle = {height: "25pt"}
-const openStyle = {height: "auto"}
 
-export default class ViewFiche extends React.Component {
+export default class ViewFiche extends Component {
   constructor(props) {
     super(props);
-    const data = {};
     this.state = {
       changeAll: false
     };
@@ -47,10 +34,10 @@ export default class ViewFiche extends React.Component {
   }
   render() {
     
-    const { loading, fiche, imageFiles, match, ficheId} = this.props;
+    const { loading, fiche, ficheId} = this.props;
   
     if(!this.props.loading && !this.props.personeelLoading){
-      const { provinciaal_, provinciaalC, vaststelling_, vaststellingC, beslissingC, beslissing_, tijdstippenC, tijdstippen_, bijkomendeC, bijkomende_, bijlagesC, bijlages_, afmeldingC, afmelding_ }= this.state;
+      const { provinciaal_, vaststelling_, beslissing_, tijdstippen_, bijkomende_}= this.state;
       const edit_link = "/fiches/edit/"+ ficheId;
       
       return (

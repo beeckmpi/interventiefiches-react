@@ -36,3 +36,68 @@ a.title, a.title:visited {
     text-decoration: none;
     color: #fff
 }
+.container {
+    min-width: 100%;
+    position:absolute;
+    left:0px; top:65px; bottom:0px; 
+    overflow-y:auto
+}
+
+@media screen and (orientation: portrait) {
+    .containerFiches {
+        min-width: 100%;
+        position:absolute;
+        left:0px; top:65px; bottom:0px; 
+        overflow-y:auto
+    }
+
+    .containerView {
+        min-width: 100%;
+        position:absolute; 
+        top:65px; 
+        bottom:0px;
+        overflow-y:auto; 
+        border-left: 1px solid #DDD;
+        display: none;
+    }
+    .containerFiches.active {
+        display: none;
+    }
+
+    .containerView.active {
+        display: inherit;
+    }
+    .arrowBack {
+        position: absolute;
+        left: 15px;
+        top: 25px; 
+        display: flex;
+        font-size: large;
+    }
+  }
+  
+  /* For landscape, we want the tool bar stick on the left */
+  
+  @media screen and (orientation: landscape) {
+    .containerFiches {
+        min-width: 30%;
+        position: absolute;
+        left:0px; top:65px; bottom:0px; 
+        overflow-y:auto;
+        overflow-x: hidden;
+    }
+
+    .containerView {
+        min-width: 60%;
+        position: absolute; 
+        left: 40%;
+        top: 65px; 
+        bottom: 0px ;
+        overflow-y: auto; 
+        border-left: 1px solid #DDD;
+    }
+  
+    .arrowBack {
+        display: none;
+    }
+  }

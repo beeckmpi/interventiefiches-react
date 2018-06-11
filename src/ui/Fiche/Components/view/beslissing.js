@@ -1,13 +1,7 @@
 // react imports
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import moment from 'moment-es6';
-import PropTypes from 'prop-types';
 
-import {areIntlLocalesSupported, intl} from 'intl-locales-supported';
-import VaststellingVIew from '../view/vaststelling';
-
-const itemStyle = {margin:'15px 0px 6px 0px'};
 export default class BeslissingView extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +34,6 @@ export default class BeslissingView extends Component {
     ));
   }
   render() {
-    const { data } = this.props;
     const { fiche } = this.state;
     return (
       <div>

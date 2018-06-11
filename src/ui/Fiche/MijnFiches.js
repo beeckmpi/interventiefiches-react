@@ -1,17 +1,18 @@
 // react imports
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 
 import FicheRow from './Components/FicheRow';
 import ViewFiche from './View';
+import KeyboardBackIcon from '@material-ui/icons/ArrowBack';
 
 export default class MijnFiches extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fiches: [],
-      activeId: 5
+      activeId: 5,
+      activeClassFiches: 'containerFiches',
+      activeClassView: 'containerView'
     };
   }
  
@@ -26,7 +27,7 @@ export default class MijnFiches extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      this.setState({fiches: responseJson});
+      this.setState({fiches: responseJson, activeId: responseJson[0]['id']});
     })
     .catch((error) =>{
       console.error(error);
@@ -34,8 +35,11 @@ export default class MijnFiches extends Component {
     });   
     
   }
+  goBack = () => {
+    this.setState({ activeClassView: 'containerView', activeClassFiches: 'containerFiches'});
+  }
   goToFiche = (id) => {    
-    this.setState({ activeId:id});
+    this.setState({ activeId:id, activeClassView: 'containerView active', activeClassFiches: 'containerFiches active'});
     this.renderFiche();
   }
   renderFiches = () => {
@@ -50,10 +54,11 @@ export default class MijnFiches extends Component {
   render() {    
     return (
       <section>
-        <div className="container" style={{minWidth: '35%', position:'absolute', left:'0px', top:'65px', bottom:'0px', overflowY:'auto'}}>        
+        <div className={this.state.activeClassFiches}>        
           {this.renderFiches()}
         </div>
-        <div className="container" style={{minWidth: '60%', position:'absolute', left:'40%', top:'65px', bottom:'0px', overflowY:'auto', borderLeft: '1px solid #DDD'}}>  
+        <div className={this.state.activeClassView}>  
+          <div className='arrowBack'><KeyboardBackIcon onClick={this.goBack} /></div>
           {this.renderFiche()}
         </div>
       </section>

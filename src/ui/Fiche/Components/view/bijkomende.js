@@ -1,8 +1,5 @@
 // react imports
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-import areIntlLocalesSupported from 'intl-locales-supported';
 
 const itemStyle = {margin:'15px 0px 6px 0px'};
 const textStyle = {whiteSpace: 'pre-line'};
@@ -33,7 +30,6 @@ export default class BijkomendeView extends Component {
     });   
   }
   render() {
-    const { data,} = this.props;
     const { fiche } = this.state;
     return (
       <div>

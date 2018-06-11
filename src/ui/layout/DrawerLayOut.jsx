@@ -215,9 +215,9 @@ class MiniDrawer extends React.Component {
         <div style={{position:'relative', display:'plex', width:'100%'}}>
           <div className={classes.toolbar} />
           <div style={{display: 'flex',}}>
-          <PrivateRoute exact path="/" component={ToevoegenFiche}/>
-          <Route exact path="/registeren" component={Join} />
+          <PrivateRoute exact path="/" component={ToevoegenFiche}/>         
           <Route exact path="/aanmelden" component={SignIn} />
+          <Route exact path="/registeren" component={Join} />
           <PrivateRoute  exact path="/fiches/Toevoegen" component={ToevoegenFiche}/>
           <PrivateRoute  exact path="/fiches/mine" component={MijnFiches}  />
           <PrivateRoute  exact path="/fiches/view/:id" component={ViewFiche}  />

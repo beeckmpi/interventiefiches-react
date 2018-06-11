@@ -1,10 +1,6 @@
 // react imports
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import moment from 'moment-es6';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-
 
 // material-ui imports
 import Paper from '@material-ui/core/Paper';
@@ -29,8 +25,7 @@ export default class FicheRow extends Component {
     this.props.onHeaderClick(this.props.value);
   }
   render() {
-    const { fiche, classes } = this.props;
-    const { redirect } = this.state
+    const { fiche } = this.props
     
     return (
       

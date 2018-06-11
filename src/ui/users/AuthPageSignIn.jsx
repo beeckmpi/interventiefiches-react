@@ -4,16 +4,11 @@ import { Redirect } from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
-import { GoogleLogin } from 'react-google-login';
 
 const paperTableStyle = {
   minWidth: '70%',
   marginBottom: '20px',
   padding: '70px 30px',
-}
-
-const responseGoogle = (response) => {
-  console.log(response);
 }
 
 export default class AuthPageSignIn extends Component {
@@ -84,10 +79,10 @@ export default class AuthPageSignIn extends Component {
       <Paper id="table" style={paperTableStyle} zDepth={3}>
         <div style={{width:'80%', display:'inline-block'}}>
           <div className="formInput input-field">
-            <TextField floatingLabelText="Email addres" hintText="Email Adres" type="email" id="email" style={{width: '100%'}} value={this.state.email} onChange={this.handleChange.bind(this)} />
+            <TextField floatingLabelText="Email addres" type="email" id="email" floatingLabelFixed={true} style={{width: '100%'}} value={this.state.email} onChange={this.handleChange.bind(this)} />
           </div>
           <div className="formInput input-field">
-            <TextField floatingLabelText="Wachtwoord" hintText="wachtwoord" type="Password" id="password" style={{width: '100%'}} value={this.state.password} onChange={this.handleChange.bind(this)} />
+            <TextField floatingLabelText="Wachtwoord" type="Password" id="password" floatingLabelFixed={true} style={{width: '100%'}} value={this.state.password} onChange={this.handleChange.bind(this)} />
           </div>
           {this.state.error && <div className="error">
             {this.state.errorMessage} 
