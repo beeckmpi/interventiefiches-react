@@ -52,10 +52,10 @@ export default class ViewFiche extends Component {
            
             <ExpansionPanel defaultExpanded="true">
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <h3><Typography>Gegeven Provinciaal Coördinator</Typography></h3>
+                <Typography>Gegeven Provinciaal Coördinator</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <Provinciaal className={provinciaal_} ficheId={ficheId} key={'provinciale_'+ficheId} />
+                <Provinciaal ficheId={ficheId} key={'provinciale_'+ficheId} />
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel>

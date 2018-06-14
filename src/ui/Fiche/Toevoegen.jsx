@@ -82,7 +82,7 @@ export default class Toevoegen extends Component {
     };
     console.log(dataInputs);
     const dataC = Object.assign({}, dataInputs, state);
-    return fetch('http://localhost:3333/fiche/store', {
+    return fetch('/fiche/store', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),

@@ -17,7 +17,7 @@ export default class MijnFiches extends Component {
   }
  
   componentDidMount = () => {
-    return fetch('http://localhost:3333/fiches/mine', {
+    return fetch('/fiches/mine', {
       method: 'Get',
       headers: {
         'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),
@@ -38,14 +38,13 @@ export default class MijnFiches extends Component {
   goBack = () => {
     this.setState({ activeClassView: 'containerView', activeClassFiches: 'containerFiches'});
   }
-  goToFiche = (id) => {    
+  goToFiche = (id, key) => {    
     this.setState({ activeId:id, activeClassView: 'containerView active', activeClassFiches: 'containerFiches active'});
     this.renderFiche();
   }
   renderFiches = () => {
-    console.log(this.state.fiches)
     return this.state.fiches.map((fiche) => (
-      <FicheRow key={fiche.id} fiche={fiche} onHeaderClick={this.goToFiche.bind(this, fiche.id)} />
+      <FicheRow key={fiche.id} fiche={fiche} onHeaderClick={this.goToFiche.bind(this, fiche.id)} active={this.state.activeId} />
     ));
   }
   renderFiche = () => {

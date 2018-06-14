@@ -85,6 +85,7 @@ a.title, a.title:visited {
         left:0px; top:65px; bottom:0px; 
         overflow-y:auto;
         overflow-x: hidden;
+        background-color: #ccc;
     }
 
     .containerView {
@@ -95,9 +96,22 @@ a.title, a.title:visited {
         bottom: 0px ;
         overflow-y: auto; 
         border-left: 1px solid #DDD;
+        background: #ccc;
     }
   
     .arrowBack {
         display: none;
     }
+  }
+
+  .containerFiches .activeClass {
+      background-color: #ccc;
+  }
+
+  #provinciaal .visible {
+      display: inherit;
+  }
+
+  #provinciaal .hidden {
+      display: none;
   }

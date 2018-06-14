@@ -11,7 +11,7 @@ export default class VaststellingView extends Component {
     };
   }
   componentDidMount = () => {
-    return fetch('http://localhost:3333/fiches/component/vaststelling/'+this.props.ficheId, {
+    return fetch('/fiches/component/vaststelling/'+this.props.ficheId, {
       method: 'Get',
       headers: {
         'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),

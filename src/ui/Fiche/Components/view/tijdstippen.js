@@ -12,7 +12,7 @@ export default class TijdstippenView extends Component {
     };
   }
   componentDidMount = () => {
-    return fetch('http://localhost:3333/fiches/component/tijdstippen/'+this.props.ficheId, {
+    return fetch('/fiches/component/tijdstippen/'+this.props.ficheId, {
       method: 'Get',
       headers: {
         'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),

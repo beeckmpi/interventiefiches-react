@@ -37,7 +37,7 @@ export default class BijlagesView extends Component {
     };
   }
   componentDidMount = () => {
-    return fetch('http://localhost:3333/fiches/component/bijlage', {
+    return fetch('/fiches/component/bijlage', {
       method: 'Get',
       headers: {
         'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),

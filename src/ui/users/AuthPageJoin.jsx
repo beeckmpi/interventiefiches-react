@@ -30,7 +30,7 @@ export default class AuthPageJoin extends Component {
   addUser = (event) => {
     event.preventDefault();
     const {username, email, password, first_name, last_name} = this.state;
-    return fetch('http://localhost:3333/register/', {
+    return fetch('/register/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

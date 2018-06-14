@@ -12,7 +12,7 @@ export default class BijkomendeView extends Component {
     };
   }
   componentDidMount = () => {
-    return fetch('http://localhost:3333/fiches/component/bijkomende/'+this.props.ficheId, {
+    return fetch('/fiches/component/bijkomende/'+this.props.ficheId, {
       method: 'Get',
       headers: {
         'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),

@@ -11,7 +11,7 @@ export default class BeslissingView extends Component {
     };
   }
   componentDidMount = () => {
-    return fetch('http://localhost:3333/fiches/component/beslissing/'+this.props.ficheId, {
+    return fetch('/fiches/component/beslissing/'+this.props.ficheId, {
       method: 'Get',
       headers: {
         'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),

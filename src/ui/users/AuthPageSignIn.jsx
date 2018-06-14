@@ -1,7 +1,7 @@
 // react imports
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 
@@ -27,10 +27,9 @@ export default class AuthPageSignIn extends Component {
     this.setState({[id]: event.target.value});
   }
   signInUser = (event) => {
-    event.preventDefault();
     this.setState({error: false, errorMessage: ""});
     const {email, password} = this.state;
-    return fetch('http://localhost:3333/login/', {
+    return fetch('/login/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -65,7 +64,7 @@ export default class AuthPageSignIn extends Component {
     })
     .catch((error) =>{
       console.error(error);
-      
+      alert(error)
     });   
    
   }
@@ -88,7 +87,7 @@ export default class AuthPageSignIn extends Component {
             {this.state.errorMessage} 
           </div>}
           <div className="formInput">
-            <RaisedButton primary={true} label="Aanmelden" onClick={this.signInUser} />
+            <Button variant="contained" color="primary" onTouchTap={this.signInUser} onClick={this.signInUser}>Aanmelden</Button>
           </div>
         </div>
         <div style={{width:'20%', display:'inline-block'}}>
