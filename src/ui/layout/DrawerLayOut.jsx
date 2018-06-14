@@ -29,6 +29,8 @@ import Join from '../users/AuthPageJoin';
 import ToevoegenFiche from '../Fiche/Toevoegen';
 import MijnFiches from '../Fiche/MijnFiches';
 import ViewFiche from '../Fiche/View';
+import Bewerken from '../Fiche/Bewerken';
+
 
 const drawerWidth = 240;
 
@@ -212,7 +214,7 @@ class MiniDrawer extends React.Component {
             </ListItem> 
           </List>
         </Drawer>
-        <div style={{position:'relative', display:'plex', width:'100%'}}>
+        <div style={{position:'relative', display:'plex', width:'100%', minHeight:'100%'}}>
           <div className={classes.toolbar} />
           <div style={{display: 'flex',}}>
           <PrivateRoute exact path="/" component={ToevoegenFiche}/>         
@@ -221,6 +223,7 @@ class MiniDrawer extends React.Component {
           <PrivateRoute  exact path="/fiches/Toevoegen" component={ToevoegenFiche}/>
           <PrivateRoute  exact path="/fiches/mine" component={MijnFiches}  />
           <PrivateRoute  exact path="/fiches/view/:id" component={ViewFiche}  />
+          <PrivateRoute  exact path="/fiches/edit/:id" component={Bewerken}  />
           </div>
         </div>
       </div>

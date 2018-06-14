@@ -3,7 +3,7 @@
 // react imports
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { withStyles } from '@material-ui/core/styles';
 // material-ui imports
 import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
@@ -12,22 +12,37 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import TimePicker from 'material-ui/TimePicker';
-import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 //styles
-const arrowDownStyles = {height:"40px", position:"absolute", "right": "5px", "top": "18px", width:"40px", color:'#AAA'};
-const paperStyle = {position:"relative", padding:"5px 15px", marginBottom:'15px', width: "95%", color:'#AAA'}
 
 const floatingLabelColor = {
   color: "#757575"
 }
-
-
-export default class Toevoegen extends Component {
+const styles = theme => ({
+  block: {
+    maxWidth: 250,
+  },
+  checkbox: {
+    maxWidth: '170pt', marginBottom: '8pt', transition: 'all 0s ease-in-out'
+  },
+  button: {
+    margin: theme.spacing.unit,
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  iconSmall: {
+    fontSize: 20,
+  },
+});
+class Toevoegen extends Component {
   constructor(props) {
     super(props);
     this.data = {};
@@ -112,7 +127,7 @@ export default class Toevoegen extends Component {
       richting,
     } = this.state;
     return (
-      <div className="container" style={{margin:"0px 0px 40px 0px", padding:"0px 8px 15px 8px"}}>
+      <div className="toevoegenView" style={{margin:"0px 0px 40px 0px", padding:"0px 8px 15px 8px"}}>
         <h3 style={{color:"#000", marginLeft:"10px"}}>Fiche Toevoegen</h3>
         <Paper id="content" style={{padding:"1px 15px 15px 15px",marginBottom: '15px',position: "relative"}}>
           <h3>Gegeven Provinciaal Coördinator</h3>
@@ -130,7 +145,6 @@ export default class Toevoegen extends Component {
               rows={2}
               name="bijkomendeInformatie"
               onChange={this.handleChange}
-              style={{minWidth:"512px", maxWidth:"80%"}}
               floatingLabelStyle={floatingLabelColor}
             />
           </div>
@@ -158,7 +172,6 @@ export default class Toevoegen extends Component {
               floatingLabelText="Oproep ontvangen door"
               name="provinciaalCoordinator"
               onChange={this.handleChange}
-              style={{minWidth: "512px"}}
             />
           </div>
           <div style={{display:"flex"}}>
@@ -326,7 +339,6 @@ export default class Toevoegen extends Component {
               multiLine={true}
               rows={2}
               name="opmerkingBereikbaarheid"
-              style={{minWidth: "512px"}}
               onChange={this.handleChange}
             />
           </div>
@@ -338,38 +350,39 @@ export default class Toevoegen extends Component {
             />
           </div>
         </Paper>
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography><h3>Vaststelling</h3></Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-           
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <Paper style={paperStyle}>
-          <KeyboardArrowDown style={arrowDownStyles} />
-          <h3>Vaststelling</h3>
-        </Paper>
-        <Paper style={paperStyle}>
-          <KeyboardArrowDown style={arrowDownStyles} />
-          <h3>Beslissing oproep bijstand</h3>
-        </Paper>
-        <Paper style={paperStyle}>
-          <KeyboardArrowDown style={arrowDownStyles} />
-          <h3>Tijdstippen + Middelen uitvoering</h3>
-        </Paper>
-        <Paper style={paperStyle}>
-          <KeyboardArrowDown style={arrowDownStyles} />
-          <h3>Bijkomende details vaststellingen</h3>
-        </Paper>
-        <Paper style={paperStyle}>
-          <KeyboardArrowDown style={arrowDownStyles} />
-          <h3>Bijlagen</h3>
-        </Paper>
-        <Paper style={paperStyle}>
-          <KeyboardArrowDown style={arrowDownStyles} />
-          <h3>Afmelding</h3>
-        </Paper>
+        <ExpansionPanel defaultExpanded={false} disabled={true}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+               <Typography variant="title">Vaststelling</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Typography variant="body2"></Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded={false} disabled={true}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+               <Typography variant="title">Beslissing oproep bijstand</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+              <Typography variant="body2"></Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel  defaultExpanded={false} disabled={true}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+               <Typography variant="title">Tijdstippen + Middelen uitvoering</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+              <Typography variant="body2"></Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            
+            <ExpansionPanel  defaultExpanded={false} disabled={true}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+               <Typography variant="title">Bijkomende details vaststellingen</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+              <Typography variant="body2"></Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
       </div>
     );
   }
@@ -377,3 +390,4 @@ export default class Toevoegen extends Component {
 Toevoegen.propTypes = {
   classes: PropTypes.object.isRequired,
 };
+export default  withStyles(styles)(Toevoegen);

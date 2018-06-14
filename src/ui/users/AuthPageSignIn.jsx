@@ -8,7 +8,7 @@ import Paper from 'material-ui/Paper';
 const paperTableStyle = {
   minWidth: '70%',
   marginBottom: '20px',
-  padding: '70px 30px',
+  padding: '0px 10px',
 }
 
 export default class AuthPageSignIn extends Component {
@@ -75,10 +75,10 @@ export default class AuthPageSignIn extends Component {
       return <Redirect to='/fiches/Toevoegen'/>;
     }
     return (
-      <Paper id="table" style={paperTableStyle} zDepth={3}>
-        <div style={{width:'80%', display:'inline-block'}}>
+      <div id="table" className="login" style={paperTableStyle} zDepth={3}>
+        <div style={{display:'inline-block'}}>
           <div className="formInput input-field">
-            <TextField floatingLabelText="Email addres" type="email" id="email" floatingLabelFixed={true} style={{width: '100%'}} value={this.state.email} onChange={this.handleChange.bind(this)} />
+            <TextField floatingLabelText="Email addres" type="email" id="email" floatingLabelFixed={true} style={{minWidth: '200px', fontSize:'smaller'}} value={this.state.email} onChange={this.handleChange.bind(this)} />
           </div>
           <div className="formInput input-field">
             <TextField floatingLabelText="Wachtwoord" type="Password" id="password" floatingLabelFixed={true} style={{width: '100%'}} value={this.state.password} onChange={this.handleChange.bind(this)} />
@@ -87,13 +87,13 @@ export default class AuthPageSignIn extends Component {
             {this.state.errorMessage} 
           </div>}
           <div className="formInput">
-            <Button variant="contained" color="primary" onTouchTap={this.signInUser} onClick={this.signInUser}>Aanmelden</Button>
+            <Button variant="contained" color="primary" onClick={this.signInUser}>Aanmelden</Button>
           </div>
         </div>
         <div style={{width:'20%', display:'inline-block'}}>
 
         </div>
-      </Paper>
+      </div>
     );
   }
 }

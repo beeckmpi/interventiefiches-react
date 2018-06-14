@@ -1,18 +1,26 @@
 // react imports
 import React, { Component } from 'react';
 
+import { withStyles } from '@material-ui/core/styles';
 import FicheRow from './Components/FicheRow';
 import ViewFiche from './View';
+import EditFiche from './Bewerken';
+import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackIcon from '@material-ui/icons/ArrowBack';
-
-export default class MijnFiches extends Component {
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+});
+class MijnFiches extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fiches: [],
       activeId: 5,
       activeClassFiches: 'containerFiches',
-      activeClassView: 'containerView'
+      activeClassView: 'containerView',
+      mode: 'view'
     };
   }
  
@@ -38,9 +46,11 @@ export default class MijnFiches extends Component {
   goBack = () => {
     this.setState({ activeClassView: 'containerView', activeClassFiches: 'containerFiches'});
   }
-  goToFiche = (id, key) => {    
-    this.setState({ activeId:id, activeClassView: 'containerView active', activeClassFiches: 'containerFiches active'});
-    this.renderFiche();
+  goToFiche = (id) => {    
+    this.setState({ activeId:id, activeClassView: 'containerView active', activeClassFiches: 'containerFiches active', mode:'view'});    
+  }
+  goToEditFiche = (id) => {
+    this.setState({mode:'edit'});    
   }
   renderFiches = () => {
     return this.state.fiches.map((fiche) => (
@@ -48,22 +58,30 @@ export default class MijnFiches extends Component {
     ));
   }
   renderFiche = () => {
-    return <ViewFiche ficheId={this.state.activeId} />
+    return <ViewFiche ficheId={this.state.activeId} onEditClick={this.goToEditFiche.bind(this, this.state.activeId)} />
+  }
+  renderEditFiche = () => {
+    return <EditFiche ficheId={this.state.activeId} />
   }
   render() {    
+    const { classes } = this.props;
     return (
       <section>
         <div className={this.state.activeClassFiches}>        
           {this.renderFiches()}
         </div>
         <div className={this.state.activeClassView}>  
-          <div className='arrowBack'><KeyboardBackIcon onClick={this.goBack} /></div>
-          {this.renderFiche()}
+        <IconButton className='arrowBack' className={classes.button} aria-label="Terug"><KeyboardBackIcon onClick={this.goBack} /></IconButton>
+          {(this.state.mode === 'view') ? this.renderFiche() : this.renderEditFiche() }
         </div>
       </section>
     );
   }
 }
+MijnFiches.propTypes = {
+};
+
+export default  withStyles(styles)(MijnFiches);
 
 
 

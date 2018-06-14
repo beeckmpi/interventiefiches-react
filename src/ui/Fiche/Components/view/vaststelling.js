@@ -21,7 +21,6 @@ export default class VaststellingView extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson)
       this.setState({fiche: responseJson});
     })
     .catch((error) =>{

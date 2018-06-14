@@ -43,6 +43,17 @@ a.title, a.title:visited {
     overflow-y:auto
 }
 
+.login {
+    position: absolute;
+    top: 65px;
+    left: 0px;
+    bottom: 0px;
+    overflow-y: auto;
+    border-left: 1px solid #DDD;
+    right: 0px;
+    min-height: 500px;
+}
+
 @media screen and (orientation: portrait) {
     .containerFiches {
         min-width: 100%;
@@ -50,11 +61,21 @@ a.title, a.title:visited {
         left:0px; top:65px; bottom:0px; 
         overflow-y:auto
     }
-
-    .containerView {
-        min-width: 100%;
+    .toevoegenView {
+        max-width: 100%;
         position:absolute; 
         top:65px; 
+        left: 0px;
+        bottom:0px;
+        overflow-y:auto; 
+        border-left: 1px solid #DDD;
+    }
+
+    .containerView {
+        max-width: 100%;
+        position:absolute; 
+        top:65px; 
+        left: 0px;
         bottom:0px;
         overflow-y:auto; 
         border-left: 1px solid #DDD;
@@ -85,18 +106,16 @@ a.title, a.title:visited {
         left:0px; top:65px; bottom:0px; 
         overflow-y:auto;
         overflow-x: hidden;
-        background-color: #ccc;
+        background-color: #eee;
     }
 
     .containerView {
-        min-width: 60%;
         position: absolute; 
-        left: 40%;
+        left: 42.5%;
         top: 65px; 
+        right: 0px;
         bottom: 0px ;
         overflow-y: auto; 
-        border-left: 1px solid #DDD;
-        background: #ccc;
     }
   
     .arrowBack {
@@ -105,9 +124,12 @@ a.title, a.title:visited {
   }
 
   .containerFiches .activeClass {
-      background-color: #ccc;
+      background-color: #ddd;
   }
 
+  .containerFiches .ficheRow:hover {
+    cursor: pointer;
+  }
   #provinciaal .visible {
       display: inherit;
   }
@@ -115,3 +137,10 @@ a.title, a.title:visited {
   #provinciaal .hidden {
       display: none;
   }
+
+.show {
+    display:inherit;
+}
+.hidden {
+    display: none;
+}

@@ -1,13 +1,14 @@
 // react imports
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
 // imports
 import Paper from 'material-ui/Paper';
-import RaisedButton from 'material-ui/RaisedButton';
-import ArrowDownward from 'material-ui/svg-icons/navigation/arrow-downward';
-import ArrowUpward from 'material-ui/svg-icons/navigation/arrow-upward';
-import PDF from 'material-ui/svg-icons/image/picture-as-pdf';
-import Edit from 'material-ui/svg-icons/image/edit';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import PDF from '@material-ui/icons/PictureAsPdf';
+import Edit from '@material-ui/icons/Edit';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -22,73 +23,122 @@ import Beslissing from './Components/view/beslissing';
 import Tijdstippen from './Components/view/tijdstippen';
 import Bijkomende from './Components/view/bijkomende';
 
-export default class ViewFiche extends Component {
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  iconSmall: {
+    fontSize: 20,
+  },
+});
+
+class ViewFiche extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      changeAll: false
+      changeAll: false,
+      expandedProvinciaal: true,
+      expandedVaststelling: false,
+      expandedBeslissing: false,
+      expandedTijdstippen: false,
+      expandedBijkomende: false
     };
   }
+  
   changeAll = () => {
-    
+    if(!this.state.changeAll) {
+      this.setState({changeAll: true, expandedProvinciaal: true, expandedVaststelling: true, expandedBeslissing: true, expandedTijdstippen: true, expandedBijkomende: true});
+    } else {
+      this.setState({changeAll: false, expandedProvinciaal: false, expandedVaststelling: false, expandedBeslissing: false, expandedTijdstippen: false, expandedBijkomende: false});
+    }
+  }
+  goToEditFiche = () => {
+    this.props.onEditClick(this.props.value);   
+  }
+  changeExpansion = (type) => {
+    switch(type){
+      case 'Provinciaal':
+        this.setState({expandedProvinciaal: !this.state.expandedProvinciaal});
+        break;
+      case 'Vaststelling':
+        this.setState({expandedVaststelling: !this.state.expandedVaststelling});
+        break;
+      case 'Beslissing':
+        this.setState({expandedBeslissing: !this.state.expandedBeslissing});
+        break;
+      case 'Tijdstippen':
+        this.setState({expandedTijdstippen: !this.state.expandedTijdstippen});
+        break;
+      case 'Bijkomende':
+        this.setState({expandedBijkomende: !this.state.expandedBijkomende});
+        break;
+      default: 
+        this.setState({expandedBijkomende: !this.state.expandedBijkomende}); 
+      break;
+    }
   }
   render() {
-    
-    const { loading, fiche, ficheId} = this.props;
+    const { ficheId, classes} = this.props;
+    const {expandedProvinciaal, expandedVaststelling, expandedBeslissing, expandedTijdstippen, expandedBijkomende} = this.state;
   
     if(!this.props.loading && !this.props.personeelLoading){
-      const { provinciaal_, vaststelling_, beslissing_, tijdstippen_, bijkomende_}= this.state;
-      const edit_link = "/fiches/edit/"+ ficheId;
-      
-      return (
-          
+      const {  vaststelling_, beslissing_, tijdstippen_, bijkomende_}= this.state;
+        
+      return (          
         <Paper id="content" style={{padding:"1px 15px 15px 15px"}} >
-          <div style={{position: "absolute", right: "37px", top:"15px", display:"flex"}}>
-            <RaisedButton style={{ fontSize:"smaller", fontWeight: "bold", marginLeft: '15pt'}} primary={true} label="PDF" icon={<PDF />} />
-            {this.state.changeAll ? <RaisedButton style={{ fontSize:"smaller", fontWeight: "bold", marginLeft: '15pt'}} secondary={true} label="Alles dichtschuiven" onClick={this.changeAll} icon={<ArrowUpward />} /> : <RaisedButton style={{ fontSize:"smaller", fontWeight: "bold", marginLeft: '15pt'}} secondary={true} label="Alles openschuiven" onClick={this.changeAll} icon={<ArrowDownward />} /> }
-            <RaisedButton style={{ fontSize:"smaller", fontWeight: "bold", marginLeft: '15pt'}} containerElement={<Link to={edit_link} />} primary={true} label="Bewerken" icon={<Edit />} />
-          </div>
-          <h3 style={{color:"#fff", marginLeft:"30px"}}>Fiche {loading ? fiche.data.fichenummer : ' ' }</h3>
-           
-            <ExpansionPanel defaultExpanded="true">
+          <div style={{position: "absolute", right: "0px",  top:"15px", display:"flex"}}>
+            <Button variant="outlined" color="primary" size="small" className={classes.button}>
+              PDF
+              <PDF className={classes.rightIcon} />
+            </Button>
+            {this.state.changeAll ? <Button variant="outlined" color="secondary" size="small" onClick={this.changeAll} className={classes.button}>Alles dichtschuiven <ArrowUpward className={classes.rightIcon} /> </Button> : <Button variant="outlined" size="small" color="secondary" className={classes.button} onClick={this.changeAll}>Alles openschuiven <ArrowDownward className={classes.rightIcon} /> </Button> }
+           <Button variant="outlined" color="primary" size="small" onClick={this.goToEditFiche.bind(this)} className={classes.button}>Bewerken <Edit className={classes.rightIcon} /> </Button>
+          </div>           
+            <ExpansionPanel defaultExpanded={true} expanded={expandedProvinciaal} style={{}} onClick={this.changeExpansion.bind(this, 'Provinciaal')}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Gegeven Provinciaal Coördinator</Typography>
+                <Typography variant="title">Gegevens Provinciaal Coördinator</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <Provinciaal ficheId={ficheId} key={'provinciale_'+ficheId} />
+              <Typography variant="body2"><Provinciaal ficheId={ficheId} key={'provinciale_'+ficheId} /></Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel>
+            <ExpansionPanel expanded={expandedVaststelling} onClick={this.changeExpansion.bind(this, 'Vaststelling')}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <h3><Typography>Vaststelling</Typography></h3>
+               <Typography variant="title">Vaststelling</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <Vaststelling classNameProp={vaststelling_}  ficheId={ficheId} key={'vaststelling_'+ficheId} />
+                <Typography variant="body2"><Vaststelling classNameProp={vaststelling_}  ficheId={ficheId} key={'vaststelling_'+ficheId} /></Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel>
+            <ExpansionPanel expanded={expandedBeslissing} onClick={this.changeExpansion.bind(this, 'Beslissing')}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <h3><Typography>Beslissing oproep bijstand</Typography></h3>
+               <Typography variant="title">Beslissing oproep bijstand</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-              <Beslissing  classNameProp={beslissing_}  ficheId={ficheId} key={'beslissing_'+ficheId} />
+              <Typography variant="body2"><Beslissing  classNameProp={beslissing_}  ficheId={ficheId} key={'beslissing_'+ficheId} /></Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel>
+            <ExpansionPanel expanded={expandedTijdstippen} onClick={this.changeExpansion.bind(this, 'Tijdstippen')}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <h3><Typography>Tijdstippen + Middelen uitvoering</Typography></h3>
+               <Typography variant="title">Tijdstippen + Middelen uitvoering</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-               <Tijdstippen classNameProp={tijdstippen_}  ficheId={ficheId} key={'tijdstippen_'+ficheId} />
+              <Typography variant="body2"><Tijdstippen classNameProp={tijdstippen_}  ficheId={ficheId} key={'tijdstippen_'+ficheId} /></Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             
-            <ExpansionPanel>
+            <ExpansionPanel expanded={expandedBijkomende} onClick={this.changeExpansion.bind(this, 'Bijkomende')}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <h3><Typography>Bijkomende details vaststellingen</Typography></h3>
+               <Typography variant="title">Bijkomende details vaststellingen</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-               <Bijkomende classNameProp={bijkomende_}  ficheId={ficheId} />
+              <Typography variant="body2"><Bijkomende classNameProp={bijkomende_}  ficheId={ficheId} /></Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Paper>
@@ -98,4 +148,8 @@ export default class ViewFiche extends Component {
     }
   }
 }
+ViewFiche.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
+export default withStyles(styles)(ViewFiche);

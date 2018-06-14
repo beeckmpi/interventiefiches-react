@@ -8,7 +8,6 @@ import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
-import { withStyles } from '@material-ui/core/styles';
 
 const paperStyle = {position:"relative",  padding:"5px 15px", width: "95%", margin: '0 0', minWidth:'550px', display: 'flex'};
 const avatar = {
@@ -20,26 +19,26 @@ export default class FicheRow extends Component {
     super(props);
     this.state = {
       redirect: false,
-      activeClass: ''
+      activeClass: 'ficheRow'
     };       
   }
   componentDidMount(){
     if (this.props.active === this.props.fiche.id){
-      this.setState({activeClass: 'activeClass'});
+      this.setState({activeClass: 'ficheRow activeClass'});
     }
   }
   componentWillReceiveProps(nextprops) {
     if (nextprops.active !== this.props.fiche.id){
-      this.setState({activeClass: ''});
+      this.setState({activeClass: 'ficheRow'});
     } else {
-      this.setState({activeClass: 'activeClass'});
+      this.setState({activeClass: 'ficheRow activeClass'});
     }
   }
   goToFiche = () => {
     this.props.onHeaderClick(this.props.value);   
   }
   render() {
-    const { fiche, active } = this.props
+    const { fiche } = this.props
     const { activeClass } = this.state
    
     return (
