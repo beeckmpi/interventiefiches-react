@@ -3,12 +3,16 @@ import React, { Component } from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import TimePicker from 'material-ui/TimePicker';
-import Checkbox from 'material-ui/Checkbox';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import VaststellingView from '../view/vaststelling';
 
@@ -40,10 +44,10 @@ class Vaststelling extends Component {
     super(props);
     this.data = {};
     this.state = {
-      andereAanwezig: false,
+      andereAanwezig: {},
       andereAanwezigOpen: false,
       andereAanwezigTekst: "",
-      andereIncident: false,
+      andereIncident: {},
       andereIncidentOpen: false,
       andereIncidentTekst: "",
       andereOngeval: false,
@@ -81,6 +85,24 @@ class Vaststelling extends Component {
       fiche: []
     };
   }
+  componentDidMount = () => {
+    return fetch('/fiches/component/vaststelling/'+this.props.ficheId, {
+      method: 'Get',
+      headers: {
+        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',        
+      }
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({fiche: responseJson});
+    })
+    .catch((error) =>{
+      console.error(error);
+      
+    });   
+  }
   AndereOptieToevoegen = (id) => {
     console.log(id);
    this.setState({[id]: true});
@@ -101,7 +123,10 @@ class Vaststelling extends Component {
 
   renderKennisgaveAnderItems(id){
     return Object.keys(this.state[id]).map((key, bool) => (
-      <Checkbox key={key} label={key} checked={this.state[id][key]} onCheck={(event, checked) => this.handleChbxChangeAndere(id, key, event, checked)} style={styles.checkbox} />
+      <FormControlLabel
+        control={<Checkbox key={key}  checked={this.state[id][key]} onChange={(event, checked) => this.handleChbxChangeAndere(id, key, event, checked)} value={this.state[id][key]} /> }
+        label={key}
+      />
     ));
   }
   handleClose = (id) => {
@@ -135,20 +160,8 @@ class Vaststelling extends Component {
   }
 
   render() {
-    const { fiche, classes, ExpansionPanelOpen } = this.props;
-    const actions = [
-      <FlatButton
-        label="Annuleren"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
-      <FlatButton
-        label="Toevoegen"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={this.handleAdd}
-      />,
-    ];
+    const { classes, ExpansionPanelOpen } = this.props;
+    const {fiche} = this.state;
     return (
       <div>
         <section id="vaststellingen" className={(this.state.mode==='edit')? 'show': 'hidden'}>
@@ -168,30 +181,58 @@ class Vaststelling extends Component {
           </div>
           <h5>Aanwezig ter plaatse</h5>
           <div>
-            <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-              <Checkbox label="Federale Politie" checked={this.state.federalePolitie} name="aanwezig[federalePolitie]" id="federalePolitie" style={styles.checkbox}  onCheck={(event, checked) => this.handleChbxChange("federalePolitie", event, checked)} />
-              <Checkbox label="Brandweer" checked={this.state.brandweer} onCheck={(event, checked) => this.handleChbxChange("brandweer", event, checked)} style={styles.checkbox} />
-              <Checkbox label="FAST / Takeldienst" checked={this.state.fast} onCheck={(event, checked) => this.handleChbxChange("fast", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Civiele Bescherming" checked={this.state.civieleBescherming} onCheck={(event, checked) => this.handleChbxChange("civieleBescherming", event, checked)} style={styles.checkbox} />
+            <div style={{fontSize: "0.83em", fontWeight: "bold"}}>Oproep aan</div>
+            <FormGroup row>
+              <FormControlLabel
+                control={<Checkbox checked={this.state.federalePolitie} onChange={(event, checked) => this.handleChbxChange("federalePolitie", event, checked)} value="federalePolitie" /> }
+                label="Federale Politie"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.brandweer} onChange={(event, checked) => this.handleChbxChange("brandweer", event, checked)} value="brandweer" /> }
+                label="Brandweer"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.fast} onChange={(event, checked) => this.handleChbxChange("fast", event, checked)} value="fast" /> }
+                label="FAST / Takeldienst"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.civieleBescherming} onChange={(event, checked) => this.handleChbxChange("civieleBescherming", event, checked)} value="civieleBescherming" /> }
+                label="Civiele Bescherming"
+              />
               {this.renderKennisgaveAnderItems("andereAanwezig")}
-              <RaisedButton label="Andere toevoegen" className={this.props.classNameProp} primary={true} onClick={() => this.AndereOptieToevoegen('andereAanwezigOpen')} />
+              <Button variant="outlined" className={classes.button} color="secondary" onClick={() => this.AndereOptieToevoegen('andereAanwezigOpen')}>
+                Andere Toevoegen
+              </Button>
+            </FormGroup>
+             
             </div>
             <Dialog
-                title="Andere categorie toevoegen"
-                actions={actions}
-                modal={false}
-                open={this.state.andereAanwezigOpen}
-                onRequestClose={this.handleClose}
-              >
-              <TextField
-                floatingLabelStyle={floatingLabelColor}
-                floatingLabelText="Andere categorie"
-                name="andereAanwezigTekst"
-                value={this.state.andereAanwezigTekst}
-                onChange={this.handleChange}
-              />
+              open={this.state.andereAanwezigOpen}
+              onClose={this.handleClose}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title">Andere categorie toevoegen</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Voeg een andere mogelijkheid toe.
+                </DialogContentText>
+                <TextField
+                  floatingLabelStyle={floatingLabelColor}
+                  floatingLabelText="Andere categorie"
+                  name="andereAanwezigTekst"
+                  value={this.state.andereAanwezigTekst}
+                  onChange={this.handleChange}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleClose} color="primary">
+                  Annuleren
+                </Button>
+                <Button onClick={this.handleAdd} color="primary">
+                  Toevoegen
+                </Button>
+              </DialogActions>
             </Dialog>
-          </div>
           <div>
             <TextField
               floatingLabelText="Opmerkingen"
@@ -206,88 +247,174 @@ class Vaststelling extends Component {
           </div>
           <h5>Incident / Schade</h5>
           <div>
-            <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-              <Checkbox label="Put in rijbaan" checked={this.state.put} onCheck={(event, checked) => this.handleChbxChange("put", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Signalisatie" checked={this.state.signalisatie} onCheck={(event, checked) => this.handleChbxChange("signalisatie", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Boom/Struik" checked={this.state.boomStruikIncident} onCheck={(event, checked) => this.handleChbxChange("boomStruikIncident", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Kunstwerk" checked={this.state.kunstwerk} onCheck={(event, checked) => this.handleChbxChange("kunstwerk", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Verzakking" checked={this.state.verzakking} onCheck={(event, checked) => this.handleChbxChange("verzakking", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Opstuikingk" checked={this.state.opstuiking} onCheck={(event, checked) => this.handleChbxChange("opstuiking", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Met. vangrail" checked={this.state.vangrail} onCheck={(event, checked) => this.handleChbxChange("vangrail", event, checked)} style={styles.checkbox} />
-              {this.renderKennisgaveAnderItems("andereIncident")}
-              <RaisedButton label="Andere toevoegen" className={this.props.classNameProp} primary={true} onClick={() => this.AndereOptieToevoegen('andereIncidentOpen')} />
-            </div>
-            <Dialog
-              title="Andere categorie toevoegen"
-              actions={actions}
-              modal={false}
-              open={this.state.andereIncidentOpen}
-              onRequestClose={this.handleClose}
-            >
-              <TextField
-                floatingLabelStyle={floatingLabelColor}
-                floatingLabelText="Andere categorie"
-                name="andereIncidentTekst"
-                value={this.state.andereIncidentTekst}
-                onChange={this.handleChange}
+            <FormGroup row>
+              <FormControlLabel
+                control={<Checkbox checked={this.state.put} onChange={(event, checked) => this.handleChbxChange("put", event, checked)} value="put" /> }
+                label="Put in rijbaan"
               />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.signalisatie} onChange={(event, checked) => this.handleChbxChange("signalisatie", event, checked)} value="signalisatie" /> }
+                label="Signalisatie"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.boomStruikIncident} onChange={(event, checked) => this.handleChbxChange("boomStruikIncident", event, checked)} value="boomStruikIncident" /> }
+                label="Boom/Struik"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.kunstwerk} onChange={(event, checked) => this.handleChbxChange("kunstwerk", event, checked)} value="kunstwerk" /> }
+                label="Kunstwerk"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.verzakking} onChange={(event, checked) => this.handleChbxChange("verzakking", event, checked)} value="verzakking" /> }
+                label="Verzakking"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.opstuiking} onChange={(event, checked) => this.handleChbxChange("opstuiking", event, checked)} value="opstuiking" /> }
+                label="Opstuikingk"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.vangrail} onChange={(event, checked) => this.handleChbxChange("vangrail", event, checked)} value="vangrail" /> }
+                label="Met. vangrail"
+              />
+              {this.renderKennisgaveAnderItems("andereIncident")}
+              <Button variant="outlined" className={classes.button} color="secondary" onClick={() => this.AndereOptieToevoegen('andereIncidentOpen')}>
+                Andere Toevoegen
+              </Button>
+            </FormGroup>
+            <Dialog
+              open={this.state.andereIncidentOpen}
+              onClose={this.handleClose}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title">Andere categorie toevoegen</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Voeg een andere mogelijkheid toe.
+                </DialogContentText>
+                <TextField
+                  floatingLabelStyle={floatingLabelColor}
+                  floatingLabelText="Andere categorie"
+                  name="andereIncidentTekst"
+                  value={this.state.andereIncidentTekst}
+                  onChange={this.handleChange}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleClose} color="primary">
+                  Annuleren
+                </Button>
+                <Button onClick={this.handleAdd} color="primary">
+                  Toevoegen
+                </Button>
+              </DialogActions>
             </Dialog>
           </div>
-          <div style={{display:'flex', alignItems:'flex-end'}}>
-            <Checkbox label="Wateroverlast" checked={this.state.wateroverlast} style={styles.checkbox} onCheck={(event, checked) => this.handleChbxChange("wateroverlast", event, checked)} />
+          <div>
+          <FormGroup row>
+              <FormControlLabel
+                control={<Checkbox checked={this.state.wateroverlast} onChange={(event, checked) => this.handleChbxChange("wateroverlast", event, checked)} value="wateroverlast" /> }
+                label="Wateroverlast"
+              />
+            
             {this.state.wateroverlast ? <TextField
               floatingLabelStyle={floatingLabelColor}
+              style={{marginTop: '-28px'}}
               floatingLabelText="Omschrijving wateroverlast"
               name="wateroverlastTekst"
               ref={input => this.data.wateroverlastTekst = input}
               defaultValue={fiche.wateroverlastTekst}
             /> : <div></div>}
-          </div>
-          <div style={{display:'flex', alignItems:'flex-end'}}>
-            <Checkbox label="Stormschade" checked={this.state.stormschade} style={styles.checkbox}onCheck={(event, checked) => this.handleChbxChange("stormschade", event, checked)} />
+          </FormGroup>
+          <FormGroup row>
+              <FormControlLabel
+                control={<Checkbox checked={this.state.stormschade} onChange={(event, checked) => this.handleChbxChange("stormschade", event, checked)} value="stormschade" /> }
+                label="Stormschade"
+              />
+            
             {this.state.stormschade ? <TextField
               floatingLabelStyle={floatingLabelColor}
               floatingLabelText="Omschrijving Stormschade"
+              style={{marginTop: '-28px'}}
               name="stormschadeTekst"
               ref={input => this.data.stormschadeTekst = input}
               defaultValue={fiche.stormschadeTekst}
             /> : <div></div>}
+          </FormGroup>
+          <div style={{display:'flex', align:'flex-start'}}>
+            <FormGroup >
+              <FormControlLabel
+                control={<Checkbox checked={this.state.ongeval} onChange={(event, checked) => this.handleChbxChange("ongeval", event, checked)} value="ongeval" /> }
+                label="Ongeval"
+              />
+            </FormGroup>
+            <FormGroup row className={!this.state.ongeval ? "ongeval hidden": "flex"}>
+              <FormControlLabel
+                control={<Checkbox checked={this.state.metStootb}  color="primary" onChange={(event, checked) => this.handleChbxChange("metStootb", event, checked)} value="metStootb" /> }
+                label="Met. stootb."
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.betStootb} color="primary"  onChange={(event, checked) => this.handleChbxChange("betStootb", event, checked)} value="betStootb" /> }
+                label="Bet. stootb"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.signalisatie2}  color="primary" onChange={(event, checked) => this.handleChbxChange("signalisatie2", event, checked)} value="signalisatie2" /> }
+                label="Signalisatie"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.electrischeInstallatie} color="primary" onChange={(event, checked) => this.handleChbxChange("electrischeInstallatie", event, checked)} value="electrischeInstallatie" /> }
+                label="Elektrische Installatie"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.boomStruikOngeval} color="primary" onChange={(event, checked) => this.handleChbxChange("boomStruikOngeval", event, checked)} value="boomStruikOngeval" /> }
+                label="Boom/Struik"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.kunstwerkOngeval} color="primary" onChange={(event, checked) => this.handleChbxChange("kunstwerkOngeval", event, checked)} value="kunstwerkOngeval" /> }
+                label="Kunstwerk."
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.bermTalut} color="primary" onChange={(event, checked) => this.handleChbxChange("bermTalut", event, checked)} value="bermTalut" /> }
+                label="Berm/talut"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.wegdek}  color="primary" onChange={(event, checked) => this.handleChbxChange("wegdek", event, checked)} value="wegdek" /> }
+                label="Wegdek"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.bijstandBrand} color="primary" onChange={(event, checked) => this.handleChbxChange("bijstandBrand", event, checked)} value="bijstandBrand" /> }
+                label="Bijstand brand"
+              />
+            </FormGroup>
           </div>
-          <div>
-            <Checkbox label="Ongeval" style={styles.checkbox} checked={this.state.ongeval} onCheck={(event, checked) => this.handleChbxChange("ongeval", event, checked)} />
-          </div>
-          <div style={{flexWrap: 'wrap', alignItems:'flex-end'}} className={!this.state.ongeval ? "hidden": "flex"}>
-            <Checkbox label="Met. stootb." checked={this.state.metStootb} onCheck={(event, checked) => this.handleChbxChange("metStootb", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Bet. stootb." checked={this.state.betStootb} onCheck={(event, checked) => this.handleChbxChange("betStootb", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Signalisatie" checked={this.state.signalisatie2} onCheck={(event, checked) => this.handleChbxChange("signalisatie2", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Elektrische Installatie" checked={this.state.electrischeInstallatie} onCheck={(event, checked) => this.handleChbxChange("electrischeInstallatie", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Boom/Struik" checked={this.state.boomStruikOngeval} onCheck={(event, checked) => this.handleChbxChange("boomStruikOngeval", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Kunstwerk." checked={this.state.kunstwerkOngeval} onCheck={(event, checked) => this.handleChbxChange("kunstwerkOngeval", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Berm/talut" checked={this.state.bermTalut} onCheck={(event, checked) => this.handleChbxChange("bermTalut", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Wegdek" checked={this.state.wegdek} onCheck={(event, checked) => this.handleChbxChange("wegdek", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Bijstand brand" checked={this.state.bijstandBrand} onCheck={(event, checked) => this.handleChbxChange("bijstandBrand", event, checked)} style={styles.checkbox} />
-
-          </div>
-          <div style={{display:'flex', alignItems:'flex-end'}}>
-            <Checkbox label="Ladingverlies" checked={this.state.ladingverlies} style={styles.checkbox} onCheck={(event, checked) => this.handleChbxChange("ladingverlies", event, checked)} />
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={this.state.ladingverlies} onChange={(event, checked) => this.handleChbxChange("ladingverlies", event, checked)} value="ladingverlies" /> }
+              label="Ladingverlies"
+            />
             {this.state.ladingverlies ? <TextField
               floatingLabelStyle={floatingLabelColor}
+              style={{marginTop: '-28px'}}
               floatingLabelText="Omschrijving Ladingverlies"
               name="ladingverliesTekst"
               ref={input => this.data.ladingverliesTekst = input}
               defaultValue={fiche.ladingverliesTekst}
             /> : <div></div>}
-          </div>
-          <div style={{display:'flex', alignItems:'flex-end'}}>
-            <Checkbox label="Bodemverontreiniging" checked={this.state.bodemverontreiniging} style={styles.checkbox} onCheck={(event, checked) => this.handleChbxChange("bodemverontreiniging", event, checked)} />
+          </FormGroup>
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={this.state.bodemverontreiniging} onChange={(event, checked) => this.handleChbxChange("bodemverontreiniging", event, checked)} value="bodemverontreiniging" /> }
+              label="Bodemverontreiniging"
+            />
             {this.state.bodemverontreiniging ? <TextField
               floatingLabelStyle={floatingLabelColor}
               floatingLabelText="Omschrijving Bodemverontreiniging"
               name="bodemverontreinigingTekst"
+              style={{marginTop: '-28px'}}
               ref={input => this.data.bodemverontreinigingTekst = input}
               defaultValue={fiche.bodemverontreinigingTekst}
             /> : <div></div>}
-          </div>
+          </FormGroup>
+        </div>
         </section>
         <section id="vaststellingen_view" className={(this.state.mode==='view')? 'show': 'hidden'} style={{padding: '8px 0px 20px 0px'}}>
         { (ExpansionPanelOpen) ?

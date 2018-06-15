@@ -3,13 +3,16 @@ import React, { Component } from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import TimePicker from 'material-ui/TimePicker';
 import TextField from 'material-ui/TextField';
-import Checkbox from 'material-ui/Checkbox';
-import Dialog from 'material-ui/Dialog';
-
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TijdstippenView from '../view/tijdstippen';
 
 const floatingLabelColor ={
@@ -42,7 +45,7 @@ class Tijdstippen extends Component {
     this.data = {};
     this.state = {
       afgraving: false,
-      andere: false,
+      andere: {},
       andereTekst: "",
       mode:'edit',
       ontstoppen: false,
@@ -57,8 +60,8 @@ class Tijdstippen extends Component {
       vanDeskundige: n,
       vanRegie: n,
       vanSignalisatie: n,
-      vaStootbanden: n,
-      vullenPut: n,
+      vaStootbanden: false,
+      vullenPut: false,
       fiche: []
     };
   }
@@ -86,7 +89,11 @@ class Tijdstippen extends Component {
 
   renderAndereItems(){
     return Object.keys(this.state.andere).map((key, bool) => (
-      <Checkbox key={key} label={key} checked={this.state.andere[key]} onCheck={(event, checked) => this.handleChbxChangeAndere(key, event, checked)} style={styles.checkbox} />
+       <FormControlLabel
+        control={<Checkbox key={key}  checked={this.state.andere[key]} onChange={(event, checked) => this.handleChbxChangeAndere(key, event, checked)} value={this.state.andere[key]} /> }
+        label={key}
+      />
+      
     ));
   }
 
@@ -123,19 +130,6 @@ class Tijdstippen extends Component {
     const { fiche } = this.state;
     const { classes } = this.props;
     const {data, state} = this;
-    const actions = [
-      <FlatButton
-        label="Annuleren"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
-      <FlatButton
-        label="Toevoegen"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={this.handleAdd}
-      />,
-    ];
     return (
       <div>
         <section id="tijdstippen"  className={(this.state.mode==='edit')? 'show': 'hidden'}>
@@ -170,30 +164,60 @@ class Tijdstippen extends Component {
             <TextField floatingLabelStyle={floatingLabelColor} floatingLabelText="Deskundige" ref={input => data.naamDeskundige = input} defaultValue={fiche.naamDeskundige} type="text" name="naamDeskundige" />
           </div>
           <div style={{width: '200px', fontWeight: "bold", paddingBottom: '10px'}}>Ondernomen actie:</div>
-          <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-            <Checkbox label="Afgraving" checked={state.afgraving} onCheck={(event, checked) => this.handleChbxChange("afgraving", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Ontstoppen riolering" checked={state.ontstoppen} onCheck={(event, checked) => this.handleChbxChange("ontstoppen", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Reinigen wegdek" checked={state.reinigen} onCheck={(event, checked) => this.handleChbxChange("reinigen", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Aanpassen stootbanden" checked={state.vaStootbanden} onCheck={(event, checked) => this.handleChbxChange("vaStootbanden", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Vullen put" checked={state.vullenPut} onCheck={(event, checked) => this.handleChbxChange("vullenPut", event, checked)} style={styles.checkbox} />
-            {this.renderAndereItems()}
-            <RaisedButton label="Andere toevoegen" className={this.props.classNameProp} primary={true} onClick={this.andereOptieToevoegen} />
-          </div>
+          <FormGroup row>
+              <FormControlLabel
+                control={<Checkbox checked={this.state.afgraving} onChange={(event, checked) => this.handleChbxChange("afgraving", event, checked)} value="afgraving" /> }
+                label="Afgraving"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.ontstoppen} onChange={(event, checked) => this.handleChbxChange("ontstoppen", event, checked)} value="ontstoppen" /> }
+                label="Ontstoppen riolering"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.reinigen} onChange={(event, checked) => this.handleChbxChange("reinigen", event, checked)} value="reinigen" /> }
+                label="Reinigen wegdek"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.vaStootbanden} onChange={(event, checked) => this.handleChbxChange("vaStootbanden", event, checked)} value="vaStootbanden" /> }
+                label="Aanpassen stootbanden"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.vullenPut} onChange={(event, checked) => this.handleChbxChange("vullenPut", event, checked)} value="vullenPut" /> }
+                label="Vullen put"
+              />
+              {this.renderAndereItems()}
+              <Button variant="outlined" className={classes.button} color="secondary" onClick={this.andereOptieToevoegen}>
+                Andere Toevoegen
+              </Button>
+          </FormGroup>
           <Dialog
-            title="Andere categorie toevoegen"
-            actions={actions}
-            modal={false}
-            open={state.open}
-            onRequestClose={this.handleClose}
-          >
-            <TextField
-              floatingLabelStyle={floatingLabelColor}
-              floatingLabelText="Andere categorie"
-              name="andereTekst"
-              value={state.andereTekst}
-              onChange={this.handleChange}
-            />
-          </Dialog>
+              open={this.state.open}
+              onClose={this.handleClose}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title">Andere categorie toevoegen</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Voeg een andere mogelijkheid toe.
+                </DialogContentText>
+                <TextField
+                  floatingLabelStyle={floatingLabelColor}
+                  floatingLabelText="Andere categorie"
+                  name="andereTekst"
+                  value={state.andereTekst}
+                  onChange={this.handleChange}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleClose} color="primary">
+                  Annuleren
+                </Button>
+                <Button onClick={this.handleAdd} color="primary">
+                  Toevoegen
+                </Button>
+              </DialogActions>
+            </Dialog>
+         
           <TextField
             floatingLabelText="Opmerkingen"
             multiLine={true}

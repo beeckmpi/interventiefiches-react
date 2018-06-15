@@ -1,5 +1,6 @@
 // react imports
 import React, { Component } from 'react';
+
 import moment from 'moment-es6';
 const textStyle = {whiteSpace: 'pre-line'};
 export default class VaststellingView extends Component {

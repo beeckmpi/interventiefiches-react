@@ -144,3 +144,9 @@ a.title, a.title:visited {
 .hidden {
     display: none;
 }
+.ongeval.hidden {
+    display: none;
+}
+.flex {
+    display: flex;
+  }

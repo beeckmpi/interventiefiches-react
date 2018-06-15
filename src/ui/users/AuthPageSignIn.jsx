@@ -29,7 +29,7 @@ export default class AuthPageSignIn extends Component {
   signInUser = (event) => {
     this.setState({error: false, errorMessage: ""});
     const {email, password} = this.state;
-    return fetch('/login/', {
+    return fetch('http://localhost:3333/login/', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

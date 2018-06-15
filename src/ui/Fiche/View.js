@@ -26,12 +26,14 @@ import Bijkomende from './Components/view/bijkomende';
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
+    fontSize: 'x-small'
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
   rightIcon: {
     marginLeft: theme.spacing.unit,
+    fontSize: 'small'
   },
   iconSmall: {
     fontSize: 20,
@@ -93,7 +95,7 @@ class ViewFiche extends Component {
       return (          
         <Paper id="content" style={{padding:"1px 15px 15px 15px"}} >
           <div style={{position: "absolute", right: "0px",  top:"15px", display:"flex"}}>
-            <Button variant="outlined" color="primary" size="small" className={classes.button}>
+            <Button variant="contained" color="primary" size="small" className={classes.button}>
               PDF
               <PDF className={classes.rightIcon} />
             </Button>

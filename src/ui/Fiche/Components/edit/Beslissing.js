@@ -2,12 +2,16 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import TimePicker from 'material-ui/TimePicker';
-import Checkbox from 'material-ui/Checkbox';
-import Dialog from 'material-ui/Dialog';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import BeslissingView from '../view/beslissing';
 
@@ -19,7 +23,7 @@ const styles = theme => ({
     maxWidth: 250,
   },
   checkbox: {
-    maxWidth: '170pt',
+    maxWidth: '70pw',
     marginBottom: '8pt'
   },
   button: {
@@ -48,7 +52,7 @@ class Beslissing extends Component {
       brandweer: false,
       civieleBescherming: false,
       fast: false,
-      kennisgaveAndere: false,
+      kennisgaveAndere: {},
       kennisgaveAndereTekst: "",
       kennisgavePolitie: false,
       naamAannemer:'',
@@ -58,6 +62,7 @@ class Beslissing extends Component {
       politie: false,
       redirect: false,
       regie: false,
+      eigen_personeel: false,
       signalisatie: false,
       signalisatieAannemer: false,
       uurOproepAannemer: n,
@@ -78,7 +83,11 @@ class Beslissing extends Component {
 
   renderKennisgaveAnderItems(){
     return Object.keys(this.state.kennisgaveAndere).map((key, bool) => (
-      <Checkbox key={key} label={key} checked={this.state.kennisgaveAndere[key]} onCheck={(event, checked) => this.handleChbxChangeAndere(key, event, checked)} style={styles.checkbox} />
+      <FormControlLabel
+        control={<Checkbox key={key}  checked={this.state.kennisgaveAndere[key]} onChange={(event, checked) => this.handleChbxChangeAndere(key, event, checked)} value={this.state.kennisgaveAndere[key]} /> }
+        label={key}
+      />
+      
     ));
   }
   handleClose = () => {
@@ -125,19 +134,7 @@ class Beslissing extends Component {
   render() {
     const {fiche, classes } = this.props;
     const {naamAannemer, naamBodemdeskundig} = this.state;
-    const actions = [
-      <FlatButton
-        label="Annuleren"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
-      <FlatButton
-        label="Toevoegen"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={this.handleAdd}
-      />,
-    ];
+    
     return (
       <div>
         <section id="beslissing"  className={(this.state.mode==='edit')? 'show': 'hidden'}>
@@ -147,78 +144,135 @@ class Beslissing extends Component {
             </Button>
           </div>
           <div style={{fontSize: "0.83em", fontWeight: "bold"}}>Oproep aan</div>
-          <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-            <Checkbox label="Eigen personeel" checked={this.state.regie} onCheck={(event, checked) => this.handleChbxChange("regie", event, checked)} style={styles.checkbox} />
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={this.state.regie} onChange={(event, checked) => this.handleChbxChange("regie", event, checked)} value="Regie" /> }
+              label="Regie"
+            />
             <div className={!this.state.regie ? "hidden": "flex"} style={{alignItems:'flex-end'}}>
-              <TimePicker floatingLabelStyle={floatingLabelColor} value={this.state.uurOproepRegie} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepRegie", event, date)} hintText="Uur oproep" name="uurOproepRegie" floatingLabelText="Uur oproep" />
-             
+              <FormControlLabel
+                control={<Checkbox checked={this.state.eigen_personeel} color="primary" onChange={(event, checked) => this.handleChbxChange("eigen_personeel", event, checked)} value="Eigen_persooneel" /> }
+                label="Eigen personeel"
+              />            
+              <TimePicker floatingLabelStyle={floatingLabelColor} style={{marginTop: '-28px'}} value={this.state.uurOproepRegie} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepRegie", event, date)} hintText="Uur oproep" name="uurOproepRegie" floatingLabelText="Uur oproep" />             
             </div>
-          </div>
-          <div >
-            <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-              <Checkbox label="Aannemer" checked={this.state.aannemer} onCheck={(event, checked) => this.handleChbxChange("aannemer", event, checked)} style={styles.checkbox} />
-              <div className={!this.state.aannemer ? "hidden": "flex"} style={{alignItems:'flex-end'}}>
-                <TimePicker floatingLabelStyle={floatingLabelColor} value={this.state.uurOproepAannemer} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepAannemer", event, date)} hintText="Uur oproep" name="uurOproepAannemer" floatingLabelText="Uur oproep" />
+          </FormGroup>
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={this.state.aannemer} onChange={(event, checked) => this.handleChbxChange("aannemer", event, checked)} value="aannemer" /> }
+              label="Aannemer"
+            />
+            <div className={!this.state.aannemer ? "hidden": "flex"} style={{alignItems:'flex-end'}}>
+                <TimePicker floatingLabelStyle={floatingLabelColor} style={{marginTop: '-28px'}}  value={this.state.uurOproepAannemer} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepAannemer", event, date)} hintText="Uur oproep" name="uurOproepAannemer" floatingLabelText="Uur oproep" />
                 <TextField
                   floatingLabelStyle={floatingLabelColor}
                   floatingLabelText="Naam aannemer"
                   name="naamAannemer"
                   ref={input => this.data.naamAannemer = input}
                   value={naamAannemer}
+                  style={{marginTop: '-28px'}} 
                 />
-              </div>
             </div>
-          </div>
-          <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-            <Checkbox label="Signalisatie" checked={this.state.signalisatie} onCheck={(event, checked) => this.handleChbxChange("signalisatie", event, checked)} style={styles.checkbox} />
+          </FormGroup>
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={this.state.signalisatie} onChange={(event, checked) => this.handleChbxChange("signalisatie", event, checked)} value="Signalisatie" /> }
+              label="Signalisatie"
+            />
             <div className={!this.state.signalisatie ? "hidden": "flex"} style={{alignItems:'flex-end'}}>
-              <TimePicker floatingLabelStyle={floatingLabelColor} value={this.state.uurOproepSignalisatie} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepSignalisatie", event, date)} hintText="Uur oproep" name="uurOproepSignalisatie" floatingLabelText="Uur oproep" />
-              <Checkbox label="Botsers Bestek" checked={this.state.BotsersBestek} onCheck={(event, checked) => this.handleChbxChange("BotsersBestek", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Aannemer" checked={this.state.signalisatieAannemer} onCheck={(event, checked) => this.handleChbxChange("signalisatieAannemer", event, checked)} style={styles.checkbox} />
+              <TimePicker floatingLabelStyle={floatingLabelColor} style={{marginTop: '-28px'}}  value={this.state.uurOproepSignalisatie} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepSignalisatie", event, date)} hintText="Uur oproep" name="uurOproepSignalisatie" floatingLabelText="Uur oproep" />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.BotsersBestek} color="primary" onChange={(event, checked) => this.handleChbxChange("BotsersBestek", event, checked)} value="BotsersBestek" /> }
+                label="Botsers Bestek"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={this.state.signalisatieAannemer} color="primary" onChange={(event, checked) => this.handleChbxChange("signalisatieAannemer", event, checked)} value="signalisatieAannemer" /> }
+                label="Aannemer"
+              />              
             </div>
-          </div>
-          <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-            <Checkbox label="Bodemdeskundige" checked={this.state.bodemdeskundige} onCheck={(event, checked) => this.handleChbxChange("bodemdeskundige", event, checked)} style={styles.checkbox} />
+          </FormGroup>
+          <FormGroup row>
+          <FormControlLabel
+              control={<Checkbox checked={this.state.bodemdeskundige} onChange={(event, checked) => this.handleChbxChange("bodemdeskundige", event, checked)} value="bodemdeskundige" /> }
+              label="Bodemdeskundige"
+            />
             <div className={!this.state.bodemdeskundige ? "hidden": "flex"} style={{alignItems:'flex-end'}}>
-              <TimePicker floatingLabelStyle={floatingLabelColor} value={this.state.uurOproepBodemdeskundige} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepBodemdeskundige", event, date)} hintText="Uur oproep" name="uurOproepBodemdeskundige" floatingLabelText="Uur oproep" />
+              <TimePicker floatingLabelStyle={floatingLabelColor} style={{marginTop: '-28px'}} value={this.state.uurOproepBodemdeskundige} format="24hr" onChange={(event, date) => this.handleChangeTime("uurOproepBodemdeskundige", event, date)} hintText="Uur oproep" name="uurOproepBodemdeskundige" floatingLabelText="Uur oproep" />
               <TextField
                 floatingLabelStyle={floatingLabelColor}
                 floatingLabelText="Naam Bodemdeskundige"
                 name="naamBodemdeskundig"
                 ref={input => this.data.naamBodemdeskundig = input}
                 value={naamBodemdeskundig}
+                style={{marginTop: '-28px'}}
               />
             </div>
-          </div>
-          <div>
-            <Checkbox label="Politie" checked={this.state.politie} onCheck={(event, checked) => this.handleChbxChange("politie", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Brandweer" checked={this.state.brandweer} onCheck={(event, checked) => this.handleChbxChange("brandweer", event, checked)} style={styles.checkbox} />
-            <Checkbox label="Civiele Bescherming" checked={this.state.civieleBescherming} onCheck={(event, checked) => this.handleChbxChange("civieleBescherming", event, checked)} style={styles.checkbox} />
-            <Checkbox label="FAST/Takeldiensten" checked={this.state.fast} onCheck={(event, checked) => this.handleChbxChange("fast", event, checked)} style={styles.checkbox} />
-          </div>
+           </FormGroup>
+           <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={this.state.politie} onChange={(event, checked) => this.handleChbxChange("politie", event, checked)} value="politie" /> }
+              label="Politie"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={this.state.brandweer} onChange={(event, checked) => this.handleChbxChange("brandweer", event, checked)} value="brandweer" /> }
+              label="Brandweer"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={this.state.civieleBescherming} onChange={(event, checked) => this.handleChbxChange("civieleBescherming", event, checked)} value="civieleBescherming" /> }
+              label="Civiele Bescherming"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={this.state.fast} onChange={(event, checked) => this.handleChbxChange("fast", event, checked)} value="fast" /> }
+              label="FAST/Takeldiensten"
+            />
+          </FormGroup>
           <h5>Kennisgave Aan</h5>
-            <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-              <Checkbox label="VVC" checked={this.state.VVC} onCheck={(event, checked) => this.handleChbxChange("VVC", event, checked)} style={styles.checkbox} />
-              <Checkbox label="VTC" checked={this.state.VTC} onCheck={(event, checked) => this.handleChbxChange("VTC", event, checked)} style={styles.checkbox} />
-              <Checkbox label="Politie" checked={this.state.kennisgavePolitie} onCheck={(event, checked) => this.handleChbxChange("kennisgavePolitie", event, checked)} style={styles.checkbox} />
-              {this.renderKennisgaveAnderItems()}
-              <RaisedButton label="Andere toevoegen" className={this.props.classNameProp} primary={true} onClick={this.KennisgaveAndereOptieToevoegen} />
-            </div>
-            <Dialog
-              title="Andere categorie toevoegen"
-              actions={actions}
-              modal={false}
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={this.state.VVC} onChange={(event, checked) => this.handleChbxChange("VVC", event, checked)} value="VVC" /> }
+              label="VVC"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={this.state.VTC} onChange={(event, checked) => this.handleChbxChange("VTC", event, checked)} value="VTC" /> }
+              label="VTC"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={this.state.kennisgavePolitie} onChange={(event, checked) => this.handleChbxChange("kennisgavePolitie", event, checked)} value="kennisgavePolitie" /> }
+              label="Politie"
+            />
+            {this.renderKennisgaveAnderItems()}
+            <Button variant="outlined" className={classes.button} color="secondary" onClick={this.KennisgaveAndereOptieToevoegen}>
+              Andere Toevoegen
+            </Button>
+          </FormGroup>
+          <Dialog
               open={this.state.open}
-              onRequestClose={this.handleClose}
+              onClose={this.handleClose}
+              aria-labelledby="form-dialog-title"
             >
-              <TextField
-                floatingLabelStyle={floatingLabelColor}
-                floatingLabelText="Andere categorie"
-                name="kennisgaveAndereTekst"
-                value={this.state.kennisgaveAndereTekst}
-                onChange={this.handleChange}
-              />
-            </Dialog>
+              <DialogTitle id="form-dialog-title">Andere categorie toevoegen</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Voeg een andere mogelijkheid toe.
+                </DialogContentText>
+                <TextField
+                  floatingLabelStyle={floatingLabelColor}
+                  floatingLabelText="Andere categorie"
+                  name="kennisgaveAndereTekst"
+                  value={this.state.kennisgaveAndereTekst}
+                  onChange={this.handleChange}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleClose} color="primary">
+                  Annuleren
+                </Button>
+                <Button onClick={this.handleAdd} color="primary">
+                  Toevoegen
+                </Button>
+              </DialogActions>
+            </Dialog>      
+            
         </section>
         <section id="beslissingen_view" className={(this.state.mode==='view')? 'show': 'hidden'} style={{padding: '8px 0px 20px 0px'}}>
           <div style={{position: 'absolute', top:'10px', right:"60px", zIndex:"1005"}} className={this.props.classNameProp}>

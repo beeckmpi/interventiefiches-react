@@ -34,12 +34,14 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit,
+    fontSize: 'small'
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
   rightIcon: {
     marginLeft: theme.spacing.unit,
+    fontSize: 'small'
   },
   iconSmall: {
     fontSize: 20,
@@ -56,7 +58,6 @@ class EditFiche extends Component {
       OpenBijkomende: true
     };
   }
-
   showHide = (type, expanded) => {
     console.log(type+' '+expanded)
   }
