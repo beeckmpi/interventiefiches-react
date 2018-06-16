@@ -17,7 +17,7 @@ class MijnFiches extends Component {
     super(props);
     this.state = {
       fiches: [],
-      activeId: 5,
+      activeId: 1,
       activeClassFiches: 'containerFiches',
       activeClassView: 'containerView',
       mode: 'view'

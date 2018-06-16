@@ -1,6 +1,6 @@
 // react imports
 import React, { Component } from 'react';
-
+import moment from 'moment-es6';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from 'material-ui/TextField';
@@ -76,8 +76,8 @@ class Vaststelling extends Component {
       signalisatie: false,
       signalisatie2: false,
       stormschade: false,
-      uurEinde: false,
-      uurTerplaatse: false,
+      uurEinde: null,
+      uurTerplaatse: null,
       verzakking: false,
       vangrail: false,
       wateroverlast: false,
@@ -96,7 +96,7 @@ class Vaststelling extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      this.setState({fiche: responseJson});
+      this.setState(responseJson[0]);
     })
     .catch((error) =>{
       console.error(error);
@@ -119,6 +119,7 @@ class Vaststelling extends Component {
       let idTekst = id + "Tekst";
       let idOpen = id + "Open";
       this.setState({[idOpen]: false, [id]: {...this.state[id], [this.state[idTekst]]: true}, [idTekst]: ""});
+      this.saveThis();
   };
 
   renderKennisgaveAnderItems(id){
@@ -131,17 +132,30 @@ class Vaststelling extends Component {
   }
   handleClose = (id) => {
    this.setState({andereIncidentOpen: false, andereAanwezigOpen: false});
+   this.saveThis();
   };
-  handleChange = (event) => this.setState({[event.target.name]: event.target.value});
-  handleChangeTime = (id, event, date) => this.setState({[id]: date});
+  handleChange = (event) => {
+    this.setState({[event.target.name]: event.target.value}, () => {
+      this.saveThis();
+    });
+    
+  }
+  handleChangeTime = (id, event, date) => {
+    this.setState({[id]: date}, () => {
+      this.saveThis();
+    });
+  }
   handleChbxChange = (id, event, checked) => {
-    this.setState({[id]: checked});
+    this.setState({[id]: checked}, () => {
+      this.saveThis();
+    });
   }
   handleChbxChangeAndere = (id, key, event, checked) => {
-    this.setState({[id]: {[key]: checked}});
+    this.setState({[id]: {[key]: checked}}, () => {
+      this.saveThis();
+    });
   }
   saveThis = () => {
-    this.setState({mode: 'view'});
     const {data, state} = this;
     let dataInputs = {};
     for (var key in data) {
@@ -149,10 +163,25 @@ class Vaststelling extends Component {
         dataInputs[data[key]["input"]["name"]] = data[key]["input"]["value"];
       }
     };
-    console.log(this.props.ficheId);
-    state.mode= 'view';
-    //const dataC = Object.assign({}, dataInputs, state);
-    //let dataImport = {'vaststellingen': dataC};
+    const dataC = Object.assign({}, dataInputs, state);
+    return fetch('/fiches/component/vaststelling/'+this.props.ficheId, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT')
+      },
+      body: JSON.stringify(dataC)
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+        
+    })
+    .catch((error) =>{
+      console.error(error);
+    });
 
   }
   setAsView = () => {
@@ -321,8 +350,9 @@ class Vaststelling extends Component {
               style={{marginTop: '-28px'}}
               floatingLabelText="Omschrijving wateroverlast"
               name="wateroverlastTekst"
-              ref={input => this.data.wateroverlastTekst = input}
-              defaultValue={fiche.wateroverlastTekst}
+              onChange={this.handleChange}
+              value={this.state.wateroverlastTekst}
+              
             /> : <div></div>}
           </FormGroup>
           <FormGroup row>
@@ -336,8 +366,8 @@ class Vaststelling extends Component {
               floatingLabelText="Omschrijving Stormschade"
               style={{marginTop: '-28px'}}
               name="stormschadeTekst"
-              ref={input => this.data.stormschadeTekst = input}
-              defaultValue={fiche.stormschadeTekst}
+              onChange={this.handleChange}
+              value={this.state.stormschadeTekst }
             /> : <div></div>}
           </FormGroup>
           <div style={{display:'flex', align:'flex-start'}}>
@@ -396,8 +426,8 @@ class Vaststelling extends Component {
               style={{marginTop: '-28px'}}
               floatingLabelText="Omschrijving Ladingverlies"
               name="ladingverliesTekst"
-              ref={input => this.data.ladingverliesTekst = input}
-              defaultValue={fiche.ladingverliesTekst}
+              onChange={this.handleChange}
+              value={this.state.ladingverliesTekst}
             /> : <div></div>}
           </FormGroup>
           <FormGroup row>
@@ -410,8 +440,8 @@ class Vaststelling extends Component {
               floatingLabelText="Omschrijving Bodemverontreiniging"
               name="bodemverontreinigingTekst"
               style={{marginTop: '-28px'}}
-              ref={input => this.data.bodemverontreinigingTekst = input}
-              defaultValue={fiche.bodemverontreinigingTekst}
+              onChange={this.handleChange}
+              value={this.state.bodemverontreinigingTekst}
             /> : <div></div>}
           </FormGroup>
         </div>
@@ -423,7 +453,7 @@ class Vaststelling extends Component {
               Resultaat
             </Button>
           </div> : "" }
-          <VaststellingView fiche={fiche} />
+          <VaststellingView  ficheId={this.props.ficheId} key={'vaststelling_'+this.props.ficheId}/>
         </section>
       </div>
     );

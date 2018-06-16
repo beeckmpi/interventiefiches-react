@@ -42,8 +42,6 @@ const styles = theme => ({
 class Beslissing extends Component {
   constructor(props) {
     super(props);
-    let d = new Date();
-    let n = d.getTime();
     this.data = {};
     this.state = {
       aannemer: false,
@@ -65,13 +63,32 @@ class Beslissing extends Component {
       eigen_personeel: false,
       signalisatie: false,
       signalisatieAannemer: false,
-      uurOproepAannemer: n,
-      uurOproepBodemdeskundige: n,
-      uurOproepRegie: n,
-      uurOproepSignalisatie: n,
+      uurOproepAannemer: null,
+      uurOproepBodemdeskundige: null,
+      uurOproepRegie: null,
+      uurOproepSignalisatie: null,
       VVC: false,
       VTC: false,
+      fiche: []
     };
+  }
+  componentDidMount = () => {
+    return fetch('/fiches/component/beslissing/'+this.props.ficheId, {
+      method: 'Get',
+      headers: {
+        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',        
+      }
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+        this.setState(responseJson[0]);
+    })
+    .catch((error) =>{
+      console.error(error);
+      
+    });   
   }
   KennisgaveAndereOptieToevoegen = () => {
    this.setState({open: true});
@@ -91,41 +108,64 @@ class Beslissing extends Component {
     ));
   }
   handleClose = () => {
-   this.setState({open: false});
+    this.setState({open: false}, () => {
+      this.saveThis();
+    });
   };
 
   handleChange = (event) => {
-    this.setState({[event.target.name]: event.target.value});
-    this.saveThis();
+    this.setState({[event.target.name]: event.target.value}, () => {
+      this.saveThis();
+    });
   }
   handleChangeTime = (id, event, date) => {
-    this.setState({[id]: date});
-    this.saveThis();
+    this.setState({[id]: date}, () => {
+      this.saveThis();
+    });
   }
   handleChbxChange = (id, event, checked) => {
-    this.setState({[id]: checked});
-    this.saveThis();
+    this.setState({[id]: checked}, () => {
+      this.saveThis();
+    });
   }
   handleChbxChangeAndere = (id, event, checked) => {
-    this.setState({kennisgaveAndere: {[id]:this.state.kennisgaveAndere}});
-    this.saveThis();
+    this.setState({kennisgaveAndere: {[id]:this.state.kennisgaveAndere}}, () => {
+      this.saveThis();
+    });
   }
   setToView = () => {
-    this.setState({mode: 'view'});
-    this.saveThis();
+    this.setState({mode: 'view'}, () => {
+      this.saveThis();
+    });
   }
   saveThis = () => {    
-    const {data} = this;
+    const {data, state} = this;
     let dataInputs = {};
     for (var key in data) {
       if("input" in data[key]){
         dataInputs[data[key]["input"]["name"]] = data[key]["input"]["value"];
       }
     };
-    console.log('test');
-    console.log(this.props.ficheId);
-    //const dataC = Object.assign({}, dataInputs, state);
-
+    const dataC = Object.assign({}, dataInputs, state);
+    console.log(dataC)
+    return fetch('/fiches/component/beslissing/'+this.props.ficheId, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT')
+      },
+      body: JSON.stringify(dataC)
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+        this.setState({fiche: responseJson[0]});
+    })
+    .catch((error) =>{
+      console.error(error);
+    }); 
   }
   setAsView = () => {
     this.setState({mode: 'edit'});
@@ -168,8 +208,8 @@ class Beslissing extends Component {
                   floatingLabelStyle={floatingLabelColor}
                   floatingLabelText="Naam aannemer"
                   name="naamAannemer"
-                  ref={input => this.data.naamAannemer = input}
-                  value={naamAannemer}
+                  onChange={this.handleChange}
+                  value={this.state.naamAannemer}
                   style={{marginTop: '-28px'}} 
                 />
             </div>
@@ -280,7 +320,7 @@ class Beslissing extends Component {
               Resultaat
             </Button>
           </div>
-          <BeslissingView fiche={fiche} />
+          <BeslissingView ficheId={this.props.ficheId} key={'beslissing_'+this.props.ficheId} />
         </section>
       </div>
     );

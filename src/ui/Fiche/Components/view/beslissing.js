@@ -7,7 +7,33 @@ export default class BeslissingView extends Component {
     super(props);
     this.data = {};
     this.state = {
-      fiche: []
+      fiche: {
+        aannemer: false,
+        bodemdeskundige: false,
+        BotsersBestek: false,
+        brandweer: false,
+        civieleBescherming: false,
+        fast: false,
+        kennisgaveAndere: {},
+        kennisgaveAndereTekst: "",
+        kennisgavePolitie: false,
+        naamAannemer:'',
+        naamBodemdeskundig:'',
+        mode: "edit",
+        open:false,
+        politie: false,
+        redirect: false,
+        regie: false,
+        eigen_personeel: false,
+        signalisatie: false,
+        signalisatieAannemer: false,
+        uurOproepAannemer: null,
+        uurOproepBodemdeskundige: null,
+        uurOproepRegie: null,
+        uurOproepSignalisatie: null,
+        VVC: false,
+        VTC: false,
+        }
     };
   }
   componentDidMount = () => {
@@ -21,7 +47,7 @@ export default class BeslissingView extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      this.setState({fiche: responseJson});
+        this.setState({fiche: responseJson[0]});
     })
     .catch((error) =>{
       console.error(error);
@@ -61,7 +87,7 @@ export default class BeslissingView extends Component {
           {fiche.VVC ? <li><strong>VVC</strong></li> : ''}
           {fiche.VTC ? <li><strong>VTC</strong></li> : ''}
           {fiche.kennisgavePolitie ? <li><strong>Politie</strong></li> : ''}
-          {fiche.kennisgaveAndere ? <li><strong>{fiche.kennisgaveAndere}</strong></li> : ''}
+          {this.renderKennisgaveAnderItems()}
           
         </ul>
       </div>

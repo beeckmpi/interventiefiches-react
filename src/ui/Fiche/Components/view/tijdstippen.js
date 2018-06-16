@@ -22,7 +22,7 @@ export default class TijdstippenView extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      this.setState({fiche: responseJson});
+      this.setState({fiche: responseJson[0]});
     })
     .catch((error) =>{
       console.error(error);
