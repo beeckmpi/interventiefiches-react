@@ -21,6 +21,7 @@ import Vaststelling from './Components/edit/vaststelling';
 import Beslissing from './Components/edit/Beslissing';
 import Tijdstippen from './Components/edit/Tijdstippen';
 import Bijkomende from './Components/edit/Bijkomende';
+import Bijlages from './Components/edit/Bijlages';
 
 //styles
 
@@ -55,7 +56,8 @@ class EditFiche extends Component {
       OpenVaststelling: true,
       OpenBeslissing: true,
       OpenTijdstippen: true,
-      OpenBijkomende: true
+      OpenBijkomende: true,
+      openBijlages: true
     };
   }
   showHide = (type, expanded) => {
@@ -65,7 +67,7 @@ class EditFiche extends Component {
   render() {
     const { ficheId, classes } = this.props;
     if(!this.props.loading){
-      const {vaststelling_, beslissing_, tijdstippen_,bijkomende_ }= this.state;
+      const {vaststelling_, beslissing_, tijdstippen_,bijkomende_, bijlages_ }= this.state;
       return (
        <Paper id="content" style={{padding:"1px 15px 15px 15px"}} >
           <div style={{position: "absolute", right: "0px",  top:"15px", display:"flex"}}>
@@ -109,8 +111,7 @@ class EditFiche extends Component {
               <ExpansionPanelDetails>
               <Typography variant="body2"><Tijdstippen classNameProp={tijdstippen_}  ficheId={ficheId} key={'tijdstippen_'+ficheId} /></Typography>
               </ExpansionPanelDetails>
-            </ExpansionPanel>
-            
+            </ExpansionPanel>            
             <ExpansionPanel defaultExpanded={true}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                <Typography variant="title">Bijkomende details vaststellingen</Typography>
@@ -118,6 +119,14 @@ class EditFiche extends Component {
               <ExpansionPanelDetails>
               <Typography variant="body2"><Bijkomende classNameProp={bijkomende_}  ficheId={ficheId} /></Typography>
               </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel defaultExpanded={true}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+               <Typography variant="title">Bijlages</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+              <Typography variant="body2"><Bijlages classNameProp={bijlages_}  ficheId={ficheId} /></Typography>
+              </ExpansionPanelDetails>            
             </ExpansionPanel>
           </Paper>
       );
