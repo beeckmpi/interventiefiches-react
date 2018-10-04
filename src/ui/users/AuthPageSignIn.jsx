@@ -4,12 +4,13 @@ import { Redirect } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
 
-const paperTableStyle = {
+const paperTableStyle = theme => ({ 
   minWidth: '70%',
   marginBottom: '20px',
-  padding: '0px 10px',
-}
+  padding: '10px 40px',
+})
 
 export default class AuthPageSignIn extends Component {
   constructor(props) {
@@ -70,13 +71,13 @@ export default class AuthPageSignIn extends Component {
   }
   render() {
     const { redirect } = this.state;
-
+    const { classes } = this.props;
     if (redirect) {
       return <Redirect to='/fiches/Toevoegen'/>;
     }
     return (
-      <div id="table" className="login" style={paperTableStyle} zDepth={3}>
-        <div style={{display:'inline-block'}}>
+      <Paper id="table" className="login" style={paperTableStyle} zDepth={3}>
+        <div style={{display:'inline-block', padding: '15px 25px'}}>
           <div className="formInput input-field">
             <TextField floatingLabelText="Email addres" type="email" id="email" floatingLabelFixed={true} style={{minWidth: '200px', fontSize:'smaller'}} value={this.state.email} onChange={this.handleChange.bind(this)} />
           </div>
@@ -93,7 +94,7 @@ export default class AuthPageSignIn extends Component {
         <div style={{width:'20%', display:'inline-block'}}>
 
         </div>
-      </div>
+      </Paper>
     );
   }
 }

@@ -17,6 +17,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import ViewFiche from './View';
 //styles
 
 const floatingLabelColor = {
@@ -47,6 +49,7 @@ class Toevoegen extends Component {
     super(props);
     this.data = {};
     this.state = {
+      activeId: 0,
       andereMeldingShow: "hidden",
       andereOproepShow: "hidden",
       bijkomendeInformatie: "",
@@ -60,6 +63,7 @@ class Toevoegen extends Component {
       provinciaalCoordinator: "",
       richting: "",
       height: '300px',
+      submitted: false
     };
   }
   
@@ -110,6 +114,7 @@ class Toevoegen extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
       console.log(responseJson);
+      this.setState({'activeId': responseJson, 'submitted': true});
     })
     .catch((error) =>{
       console.error(error);
@@ -125,8 +130,11 @@ class Toevoegen extends Component {
       opDatum,
       oproepDoor,
       richting,
+      submitted
     } = this.state;
     return (
+      <div>
+      {(!submitted) ?
       <div className="toevoegenView" style={{margin:"0px 0px 40px 0px", padding:"0px 8px 15px 8px"}}>
         <h3 style={{color:"#000", marginLeft:"10px"}}>Fiche Toevoegen</h3>
         <Paper id="content" style={{padding:"1px 15px 15px 15px",marginBottom: '15px',position: "relative"}}>
@@ -182,6 +190,7 @@ class Toevoegen extends Component {
               floatingLabelText="GSM"
               name="GSM"
               value={this.state.GSM}
+              onChange={this.handleChange}
             />
           </div>
           <div style={{display:"flex", flexWrap:'wrap'}}>
@@ -383,6 +392,8 @@ class Toevoegen extends Component {
               <Typography variant="body2"></Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
+      </div>
+      : <ViewFiche ficheId={this.state.activeId} /> }
       </div>
     );
   }

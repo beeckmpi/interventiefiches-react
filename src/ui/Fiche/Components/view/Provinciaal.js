@@ -37,7 +37,7 @@ export default class Provinciaal extends Component {
       const self = this;
       setTimeout(function() {
         self.setState({fiche: responseJson, lidwoord: lidwoord, loading: 'hidden', contentP: 'visible'});
-    }, 180);
+    }, 20);
       
     })
     .catch((error) =>{

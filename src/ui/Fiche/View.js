@@ -22,6 +22,7 @@ import Vaststelling from './Components/view/vaststelling';
 import Beslissing from './Components/view/beslissing';
 import Tijdstippen from './Components/view/tijdstippen';
 import Bijkomende from './Components/view/bijkomende';
+import Bijlages from './Components/view/bijlages';
 
 const styles = theme => ({
   button: {
@@ -49,7 +50,8 @@ class ViewFiche extends Component {
       expandedVaststelling: false,
       expandedBeslissing: false,
       expandedTijdstippen: false,
-      expandedBijkomende: false
+      expandedBijkomende: false,
+      expandedBijlages: false
     };
   }
   
@@ -80,6 +82,9 @@ class ViewFiche extends Component {
       case 'Bijkomende':
         this.setState({expandedBijkomende: !this.state.expandedBijkomende});
         break;
+      case 'Bijlages':
+        this.setState({expandedBijlages: !this.state.expandedBijlages});
+        break;
       default: 
         this.setState({expandedBijkomende: !this.state.expandedBijkomende}); 
       break;
@@ -87,10 +92,10 @@ class ViewFiche extends Component {
   }
   render() {
     const { ficheId, classes} = this.props;
-    const {expandedProvinciaal, expandedVaststelling, expandedBeslissing, expandedTijdstippen, expandedBijkomende} = this.state;
+    const {expandedProvinciaal, expandedVaststelling, expandedBeslissing, expandedTijdstippen, expandedBijkomende, expandedBijlages} = this.state;
   
     if(!this.props.loading && !this.props.personeelLoading){
-      const {  vaststelling_, beslissing_, tijdstippen_, bijkomende_}= this.state;
+      const {  vaststelling_, beslissing_, tijdstippen_, bijkomende_, bijlages_}= this.state;
         
       return (          
         <Paper id="content" style={{padding:"1px 15px 15px 15px"}} >
@@ -132,14 +137,21 @@ class ViewFiche extends Component {
               <ExpansionPanelDetails>
               <Typography variant="body2"><Tijdstippen classNameProp={tijdstippen_}  ficheId={ficheId} key={'tijdstippen_'+ficheId} /></Typography>
               </ExpansionPanelDetails>
-            </ExpansionPanel>
-            
+            </ExpansionPanel>            
             <ExpansionPanel expanded={expandedBijkomende} onClick={this.changeExpansion.bind(this, 'Bijkomende')}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                <Typography variant="title">Bijkomende details vaststellingen</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
               <Typography variant="body2"><Bijkomende classNameProp={bijkomende_}  ficheId={ficheId} /></Typography>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel expanded={expandedBijlages} onClick={this.changeExpansion.bind(this, 'Bijlages')}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+               <Typography variant="title">Bijlages</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+              <Typography variant="body2"><Bijlages classNameProp={bijlages_}  ficheId={ficheId} /></Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Paper>

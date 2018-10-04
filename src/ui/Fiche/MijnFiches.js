@@ -7,11 +7,13 @@ import ViewFiche from './View';
 import EditFiche from './Bewerken';
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackIcon from '@material-ui/icons/ArrowBack';
+import Paper from '@material-ui/core/Paper';
 const styles = theme => ({
   button: {
     margin: '8px 8px 14px 8px'
   },
 });
+const paperStyle = {position:"relative",  padding:"35px 15px", width: "95%", margin: '0 0', minWidth:'550px', display: 'flex'};
 class MijnFiches extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +22,8 @@ class MijnFiches extends Component {
       activeId: 1,
       activeClassFiches: 'containerFiches',
       activeClassView: 'containerView',
-      mode: 'view'
+      mode: 'view',
+      emptyFiches: true
     };
   }
  
@@ -35,7 +38,10 @@ class MijnFiches extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      this.setState({fiches: responseJson, activeId: responseJson[0]['id']});
+      if (Array.isArray(responseJson)){
+        this.setState({fiches: responseJson, activeId: responseJson[0]['id'], emptyFiches:false});
+      } 
+      
     })
     .catch((error) =>{
       console.error(error);
@@ -66,14 +72,27 @@ class MijnFiches extends Component {
   render() {    
     const { classes } = this.props;
     return (
+<<<<<<< HEAD
       <section className={'gridContainer'}>
         <div className={this.state.activeClassFiches}>        
           {this.renderFiches()}
+=======
+      <section>
+        <div className={this.state.activeClassFiches}>      
+          {(!this.state.emptyFiches) ? this.renderFiches() : <Paper style={paperStyle}>Er zijn geen fiches beschikbaar</Paper>}          
+>>>>>>> f3ac44cee1e8b904cf545a970acef1c2a502b18b
         </div>
+        {(!this.state.emptyFiches) ?
         <div className={this.state.activeClassView}>  
+<<<<<<< HEAD
         <IconButton className={'arrowBack ' + classes.button} aria-label="Terug"><KeyboardBackIcon onClick={this.goBack} /></IconButton>
           {(this.state.mode === 'view') ? this.renderFiche() : this.renderEditFiche() }
+=======
+        <IconButton className='arrowBack' className={classes.button} aria-label="Terug"><KeyboardBackIcon onClick={this.goBack} /></IconButton>
+         {(this.state.mode === 'view') ? this.renderFiche() : this.renderEditFiche() }
+>>>>>>> f3ac44cee1e8b904cf545a970acef1c2a502b18b
         </div>
+        : '' }
       </section>
     );
   }

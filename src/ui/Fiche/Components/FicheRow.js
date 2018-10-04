@@ -9,7 +9,11 @@ import { Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 
+<<<<<<< HEAD
 const paperStyle = {position:"relative",  padding:"5px 15px", width:'100%', margin: '0 0', display: 'flex'};
+=======
+const paperStyle = {position:"relative",  padding:"15px 15px 15px 15px", width: "95%", margin: '0 0', minWidth:'550px', display: 'flex'};
+>>>>>>> f3ac44cee1e8b904cf545a970acef1c2a502b18b
 const avatar = {
     backgroundColor: red[500],
     marginTop: '5px'

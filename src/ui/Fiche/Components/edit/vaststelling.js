@@ -112,7 +112,7 @@ class Vaststelling extends Component {
     return Object.keys(this.state[id]).map((key, bool) => (
       <FormControlLabel
         control={<Checkbox key={key}  checked={this.state[id][key]} onChange={(event, checked) => this.handleChbxChangeAndere(id, key, event, checked)} value={this.state[id][key]} /> }
-        label={key}
+        label={this.state[id][key]}
       />
     ));
   }
