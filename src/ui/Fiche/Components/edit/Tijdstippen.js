@@ -14,7 +14,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TijdstippenView from '../view/tijdstippen';
-
+import FetchC from '../../../../methods/fetch';
+console.log(FetchC);
 const floatingLabelColor ={
   color: "#757575"
 }
@@ -62,23 +63,9 @@ class Tijdstippen extends Component {
       vullenPut: false,
     };
   }
-  componentDidMount = () => {
-    return fetch('/fiches/component/tijdstippen/'+this.props.ficheId, {
-      method: 'Get',
-      headers: {
-        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',        
-      }
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState(responseJson[0]);
-    })
-    .catch((error) =>{
-      console.error(error);
-      
-    });   
+  async componentDidMount ()  {
+    await FetchC.getComponent('tijdstippen', this.props.ficheId).then((data) => {this.setState(data[0])});
+    
   }
   andereOptieToevoegen = () => {this.setState({open: true})};
 
@@ -118,7 +105,7 @@ class Tijdstippen extends Component {
     });
    }
    
-  saveThis = () => {
+   saveThis = () => {    
     const {data, state} = this;
     let dataInputs = {};
     for (var key in data) {
@@ -127,24 +114,10 @@ class Tijdstippen extends Component {
       }
     };
     const dataC = Object.assign({}, dataInputs, state);
-    return fetch('/fiches/component/tijdstippen/'+this.props.ficheId, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT')
-      },
-      body: JSON.stringify(dataC)
+    return FetchC.storeComponents('tijdstippen', this.props.ficheId, dataC).then((data) => {
+      this.setState({fiche: data[0]});
     })
-    .then((response) => response.json())
-    .then((responseJson) => {
-        
-    })
-    .catch((error) =>{
-      console.error(error);
-    });
+    
   }
 
   setAsView = () => {
@@ -165,13 +138,13 @@ class Tijdstippen extends Component {
           <div style={{fontSize: "0.83em", fontWeight: "bold"}}></div>
           <div style={{fontWeight: "bold"}}>Regie ter plaatse:</div>
           <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-            <TimePicker floatingLabelStyle={floatingLabelColor} onChange={(event, date) => this.handleChangeTime("vanRegie", event, date)} style={{maxWidth:'100px'}} value={moment(state.vanRegie).format()} defaultValue={moment(state.vanRegie).format()} format="24hr" hintText="Van" name="regieVan" floatingLabelText="Van" />
+            <TimePicker floatingLabelStyle={floatingLabelColor} onChange={(event, date) => this.handleChangeTime("vanRegie", event, date)} style={{maxWidth:'100px'}} value={state.vanRegie} defaultValue={state.vanRegie} format="24hr" hintText="Van" name="regieVan" floatingLabelText="Van" />
             <TimePicker floatingLabelStyle={floatingLabelColor} onChange={(event, date) => this.handleChangeTime("totRegie", event, date)} style={{maxWidth:'100px'}} value={this.state.totRegie} format="24hr" hintText="Tot" name="regieTot" floatingLabelText="Tot" />
             <TextField  floatingLabelStyle={floatingLabelColor} floatingLabelText="Regie arbeiders" ref={input => state.regieArbeider = input} value={state.regieArbeider} type="number" name="regieArbeider" />
           </div>
           <div style={{width: '200px', fontWeight: "bold"}}>Aannemer ter plaatse:</div>
           <div style={{display:'flex', flexWrap: 'wrap', alignItems:'flex-end'}}>
-            <TimePicker floatingLabelStyle={floatingLabelColor} onChange={(event, date) => this.handleChangeTime("vanAannemer", event, date)} style={{maxWidth:'100px'}} value={moment(state.vanAannemer)} format="24hr" hintText="Van" name="regieVan" floatingLabelText="Van" />
+            <TimePicker floatingLabelStyle={floatingLabelColor} onChange={(event, date) => this.handleChangeTime("vanAannemer", event, date)} style={{maxWidth:'100px'}} value={state.vanAannemer} format="24hr" hintText="Van" name="regieVan" floatingLabelText="Van" />
             <TimePicker floatingLabelStyle={floatingLabelColor} onChange={(event, date) => this.handleChangeTime("totAannemer", event, date)} style={{maxWidth:'100px'}} value={state.totAannemer} format="24hr" hintText="Tot" name="regieTot" floatingLabelText="Tot" />
             <TextField floatingLabelStyle={floatingLabelColor} floatingLabelText="Ploegbaas Aannemer" ref={input => state.regieToezichter = input} defaultValue={state.regieToezichter} type="text" name="regieToezichter" />
           </div>

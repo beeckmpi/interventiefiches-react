@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackIcon from '@material-ui/icons/ArrowBack';
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: '8px 8px 14px 8px'
   },
 });
 class MijnFiches extends Component {
@@ -66,12 +66,12 @@ class MijnFiches extends Component {
   render() {    
     const { classes } = this.props;
     return (
-      <section>
+      <section className={'gridContainer'}>
         <div className={this.state.activeClassFiches}>        
           {this.renderFiches()}
         </div>
         <div className={this.state.activeClassView}>  
-        <IconButton className='arrowBack' className={classes.button} aria-label="Terug"><KeyboardBackIcon onClick={this.goBack} /></IconButton>
+        <IconButton className={'arrowBack ' + classes.button} aria-label="Terug"><KeyboardBackIcon onClick={this.goBack} /></IconButton>
           {(this.state.mode === 'view') ? this.renderFiche() : this.renderEditFiche() }
         </div>
       </section>

@@ -9,7 +9,7 @@ import { Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 
-const paperStyle = {position:"relative",  padding:"5px 15px", width: "95%", margin: '0 0', minWidth:'550px', display: 'flex'};
+const paperStyle = {position:"relative",  padding:"5px 15px", width:'100%', margin: '0 0', display: 'flex'};
 const avatar = {
     backgroundColor: red[500],
     marginTop: '5px'
@@ -49,7 +49,7 @@ export default class FicheRow extends Component {
             {fiche.provinciaalCoordinator.charAt(0).toUpperCase()}
           </Avatar>
         </div>
-        <div style={{width: '420px'}}>
+        <div style={{width: 'auto'}}>
           <Typography style={{fontWeight: 'bold'}}>{fiche.provinciaalCoordinator}</Typography>
           <div><Typography>{fiche.melding}: Te district {fiche.district}</Typography></div>
           <Typography>Aangemaakt op {moment(fiche.createdAt).format('DD-MM-YYYY HH:mm')}</Typography>

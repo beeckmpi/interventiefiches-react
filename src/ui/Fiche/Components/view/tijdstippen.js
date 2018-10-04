@@ -1,6 +1,7 @@
 // react imports
 import React, { Component } from 'react';
 import moment from 'moment-es6';
+import FetchC from '../../../../methods/fetch';
 
 const textStyle = {whiteSpace: 'pre-line'};
 export default class TijdstippenView extends Component {
@@ -11,23 +12,8 @@ export default class TijdstippenView extends Component {
       fiche: []
     };
   }
-  componentDidMount = () => {
-    return fetch('/fiches/component/tijdstippen/'+this.props.ficheId, {
-      method: 'Get',
-      headers: {
-        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',        
-      }
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({fiche: responseJson[0]});
-    })
-    .catch((error) =>{
-      console.error(error);
-      
-    });   
+  async componentDidMount (){
+    await FetchC.getComponent('tijdstippen', this.props.ficheId).then((data) => {this.setState({fiche: data[0]})});
   }
   renderAndereItems(){
     return Object.keys(this.state.fiche.andere).map((key, bool) => (

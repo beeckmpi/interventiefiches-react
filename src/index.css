@@ -88,25 +88,26 @@ a.title, a.title:visited {
     .containerView.active {
         display: inherit;
     }
-    .arrowBack {
-        position: absolute;
-        left: 15px;
-        top: 25px; 
-        display: flex;
-        font-size: large;
-    }
   }
   
   /* For landscape, we want the tool bar stick on the left */
   
   @media screen and (orientation: landscape) {
+    .gridContainer {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        width: 100%;
+        height: 100%;
+    }
     .containerFiches {
-        min-width: 30%;
+       /* min-width: 30%; */
         position: absolute;
         left:0px; top:65px; bottom:0px; 
+        right: 57.5%;
         overflow-y:auto;
         overflow-x: hidden;
         background-color: #eee;
+        grid-column: 1;
     }
 
     .containerView {
@@ -116,10 +117,11 @@ a.title, a.title:visited {
         right: 0px;
         bottom: 0px ;
         overflow-y: auto; 
+        grid-column: 2;
     }
   
-    .arrowBack {
-        display: none;
+    .containerView .arrowBack {
+        visibility: hidden
     }
   }
 

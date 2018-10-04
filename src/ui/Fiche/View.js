@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // imports
 import Paper from 'material-ui/Paper';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -94,13 +94,12 @@ class ViewFiche extends Component {
         
       return (          
         <Paper id="content" style={{padding:"1px 15px 15px 15px"}} >
-          <div style={{position: "absolute", right: "0px",  top:"15px", display:"flex"}}>
-            <Button variant="contained" color="primary" size="small" className={classes.button}>
-              PDF
-              <PDF className={classes.rightIcon} />
-            </Button>
-            {this.state.changeAll ? <Button variant="outlined" color="secondary" size="small" onClick={this.changeAll} className={classes.button}>Alles dichtschuiven <ArrowUpward className={classes.rightIcon} /> </Button> : <Button variant="outlined" size="small" color="secondary" className={classes.button} onClick={this.changeAll}>Alles openschuiven <ArrowDownward className={classes.rightIcon} /> </Button> }
-           <Button variant="outlined" color="primary" size="small" onClick={this.goToEditFiche.bind(this)} className={classes.button}>Bewerken <Edit className={classes.rightIcon} /> </Button>
+          <div style={{position: "absolute", right: "0px",  top:"0px", display:"flex"}}>
+            <IconButton className={classes.button} aria-label="PDF generen">
+              <PDF  />
+            </IconButton>
+            {this.state.changeAll ? <IconButton aria-label="Alles dichtschuiven" onClick={this.changeAll} className={classes.button}><ArrowUpward /> </IconButton> : <IconButton aria-label="Alles openschuiven" className={classes.button} onClick={this.changeAll}><ArrowDownward /> </IconButton> }
+           <IconButton onClick={this.goToEditFiche.bind(this)} aria-label="Bewerken" className={classes.button}><Edit /> </IconButton>
           </div>           
             <ExpansionPanel defaultExpanded={true} expanded={expandedProvinciaal} style={{}} onClick={this.changeExpansion.bind(this, 'Provinciaal')}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>

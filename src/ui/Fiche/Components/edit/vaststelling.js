@@ -15,6 +15,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import VaststellingView from '../view/vaststelling';
+import FetchC from '../../../../methods/fetch';
 
 const floatingLabelColor = {
   color: "#757575"
@@ -85,27 +86,12 @@ class Vaststelling extends Component {
       fiche: []
     };
   }
-  componentDidMount = () => {
-    return fetch('/fiches/component/vaststelling/'+this.props.ficheId, {
-      method: 'Get',
-      headers: {
-        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT'),
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',        
-      }
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState(responseJson[0]);
-    })
-    .catch((error) =>{
-      console.error(error);
-      
-    });   
+  async componentDidMount ()  {
+    await FetchC.getComponent('vaststelling', this.props.ficheId).then((data) => {this.setState(data[0])});
   }
   AndereOptieToevoegen = (id) => {
-    console.log(id);
    this.setState({[id]: true});
+   
   };
 
   handleAdd = (event) => {
@@ -119,7 +105,7 @@ class Vaststelling extends Component {
       let idTekst = id + "Tekst";
       let idOpen = id + "Open";
       this.setState({[idOpen]: false, [id]: {...this.state[id], [this.state[idTekst]]: true}, [idTekst]: ""});
-      this.saveThis();
+      FetchC.storeAndere(this.props.ficheId, {ficheId: this.props.ficheId, tekst: this.state.andereAanwezigTekst, type: 'Oproep_andere'})
   };
 
   renderKennisgaveAnderItems(id){
@@ -164,25 +150,7 @@ class Vaststelling extends Component {
       }
     };
     const dataC = Object.assign({}, dataInputs, state);
-    return fetch('/fiches/component/vaststelling/'+this.props.ficheId, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin": '*',
-        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-        'Authorization': 'Bearer ' + sessionStorage.getItem('JWT')
-      },
-      body: JSON.stringify(dataC)
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-        
-    })
-    .catch((error) =>{
-      console.error(error);
-    });
-
+    FetchC.storeComponents('vaststelling', this.props.ficheId, dataC)
   }
   setAsView = () => {
     this.setState({mode: 'edit'});
